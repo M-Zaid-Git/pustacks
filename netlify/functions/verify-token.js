@@ -1,85 +1,94 @@
-// Verify a user's JWT token
-const { MongoClient, ObjectId } = require('mongodb');
-const jwt = require('jsonwebtoken');
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-fallback-secret-key-change-in-production';
-
-// Initialize MongoDB client
-const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB_NAME || 'unishare';
-let cachedDb = null;
-
-// Helper function to connect to MongoDB
-async function connectToDatabase() {
-  if (cachedDb) {
-    return cachedDb;
-  }
-
-  // Validate MongoDB URI
-  if (!uri) {
-    throw new Error('MONGODB_URI environment variable is not set');
-  }
-
-  // Connect to MongoDB
-  const client = new MongoClient(uri);
-  await client.connect();
-
-  const db = client.db(dbName);
-  cachedDb = db;
-
-  return db;
-}
-
+// Simplified token verification for ZESHO admin system
 exports.handler = async (event, context) => {
+  // Enable CORS
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json',
+  };
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: '',
+    };
+  }
+
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ message: 'Method Not Allowed' }),
     };
   }
 
   try {
-    // Get the token from the request body
-    const { token } = JSON.parse(event.body);
+    // Get admin secret from environment or request
+    const adminSecret = process.env.VITE_ADMIN_SECRET || 'como';
+    
+    // Check for token in body or headers
+    let token = null;
+    
+    if (event.body) {
+      const body = JSON.parse(event.body);
+      token = body.token || body.secret;
+    }
+    
+    if (!token && event.headers.authorization) {
+      token = event.headers.authorization.replace('Bearer ', '');
+    }
 
     if (!token) {
       return {
         statusCode: 401,
-        body: JSON.stringify({ message: 'Authentication token required' }),
+        headers,
+        body: JSON.stringify({ 
+          message: 'No authentication token provided',
+          valid: false 
+        }),
       };
     }
 
-    // Verify the token
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    // Return the decoded user data
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: 'Token is valid',
-        user: {
-          id: decoded.id,
-          name: decoded.name,
-          email: decoded.email,
-          role: decoded.role,
-        },
-      }),
-    };
-  } catch (error) {
-    console.error('Token verification error:', error);
-
-    // Return appropriate error based on JWT error
-    if (error.name === 'TokenExpiredError') {
+    // Simple admin verification
+    if (token === adminSecret) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          message: 'Admin token is valid',
+          valid: true,
+          admin: true,
+          user: {
+            role: 'admin',
+            name: 'Admin User',
+            email: 'admin@zesho.edu'
+          },
+          timestamp: new Date().toISOString(),
+        }),
+      };
+    } else {
       return {
         statusCode: 401,
-        body: JSON.stringify({ message: 'Token expired' }),
+        headers,
+        body: JSON.stringify({ 
+          message: 'Invalid admin token',
+          valid: false 
+        }),
       };
     }
-
+  } catch (error) {
+    console.error('Token verification error:', error);
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Invalid token' }),
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ 
+        message: 'Internal Server Error',
+        valid: false 
+      }),
     };
   }
 };
