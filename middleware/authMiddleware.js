@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import { User } from '../models/index.js';
 
 // Protect routes - verify token
-export const protect = async (req, res, next) => {
+export const auth = async (req, res, next) => {
   try {
     let token;
 
@@ -19,7 +19,7 @@ export const protect = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to access this route',
+        error: 'Not authorized to access this route - No token provided',
       });
     }
 
@@ -28,12 +28,12 @@ export const protect = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Set user in req object
-      req.user = await User.findById(decoded.id).select('-password');
+      req.user = await User.findById(decoded.userId).select('-password');
 
       if (!req.user) {
         return res.status(401).json({
           success: false,
-          message: 'Not authorized to access this route',
+          error: 'Not authorized - User not found',
         });
       }
 
@@ -41,16 +41,14 @@ export const protect = async (req, res, next) => {
     } catch (error) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to access this route',
-        error: error.message,
+        error: 'Not authorized - Invalid token',
       });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Auth middleware error:', error);
     return res.status(500).json({
       success: false,
-      message: 'Server error',
-      error: error.message,
+      error: 'Server error in authentication',
     });
   }
 };
@@ -79,7 +77,7 @@ export const optionalAuth = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Set user in req object
-      req.user = await User.findById(decoded.id).select('-password');
+      req.user = await User.findById(decoded.userId).select('-password');
 
       next();
     } catch (error) {
@@ -87,7 +85,7 @@ export const optionalAuth = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    console.error(error);
+    console.error('Optional auth error:', error);
     next();
   }
 };
@@ -98,14 +96,14 @@ export const authorize = (...roles) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to access this route',
+        error: 'Not authorized to access this route',
       });
     }
 
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: `User role ${req.user.role} is not authorized to access this route`,
+        error: `User role ${req.user.role} is not authorized to access this route`,
       });
     }
 
@@ -113,8 +111,20 @@ export const authorize = (...roles) => {
   };
 };
 
+// Admin only middleware
+export const adminOnly = (req, res, next) => {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      error: 'Access denied. Admin privileges required.',
+    });
+  }
+  next();
+};
+
 export default {
-  protect,
+  auth,
   optionalAuth,
   authorize,
+  adminOnly,
 };

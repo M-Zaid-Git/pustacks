@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 
@@ -6,100 +7,85 @@ const MaterialsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [materials, setMaterials] = useState([]);
 
-  // Mock materials data
-  const materials = [
-    {
-      id: 1,
-      title: 'Advanced Data Structures and Algorithms',
-      description: 'Comprehensive guide covering trees, graphs, dynamic programming, and optimization techniques.',
-      category: 'Computer Science',
-      author: 'Dr. Sarah Johnson',
-      university: 'MIT',
-      uploadDate: '2024-03-15',
-      downloads: 1247,
-      rating: 4.8,
-      type: 'PDF',
-      size: '15.2 MB',
-      tags: ['Algorithms', 'Data Structures', 'Programming'],
-      thumbnail: '📊'
-    },
-    {
-      id: 2,
-      title: 'Calculus I Complete Notes',
-      description: 'Full semester notes covering limits, derivatives, integrals, and applications.',
-      category: 'Mathematics',
-      author: 'Prof. Michael Chen',
-      university: 'Stanford',
-      uploadDate: '2024-03-12',
-      downloads: 892,
-      rating: 4.9,
-      type: 'PDF',
-      size: '23.5 MB',
-      tags: ['Calculus', 'Mathematics', 'Derivatives'],
-      thumbnail: '📐'
-    },
-    {
-      id: 3,
-      title: 'Quantum Physics Laboratory Manual',
-      description: 'Practical experiments and theoretical background for quantum mechanics lab.',
-      category: 'Physics',
-      author: 'Dr. Elena Rodriguez',
-      university: 'Caltech',
-      uploadDate: '2024-03-10',
-      downloads: 634,
-      rating: 4.7,
-      type: 'PDF',
-      size: '18.7 MB',
-      tags: ['Quantum Physics', 'Laboratory', 'Experiments'],
-      thumbnail: '⚛️'
-    },
-    {
-      id: 4,
-      title: 'Organic Chemistry Reaction Mechanisms',
-      description: 'Detailed study of reaction mechanisms, stereochemistry, and synthetic strategies.',
-      category: 'Chemistry',
-      author: 'Prof. David Kim',
-      university: 'Harvard',
-      uploadDate: '2024-03-08',
-      downloads: 567,
-      rating: 4.6,
-      type: 'PDF',
-      size: '12.8 MB',
-      tags: ['Organic Chemistry', 'Reactions', 'Mechanisms'],
-      thumbnail: '🧪'
-    },
-    {
-      id: 5,
-      title: 'Machine Learning Fundamentals',
-      description: 'Introduction to ML algorithms, neural networks, and practical applications.',
-      category: 'Computer Science',
-      author: 'Dr. Alex Thompson',
-      university: 'UC Berkeley',
-      uploadDate: '2024-03-05',
-      downloads: 1156,
-      rating: 4.9,
-      type: 'PDF',
-      size: '28.3 MB',
-      tags: ['Machine Learning', 'AI', 'Neural Networks'],
-      thumbnail: '🤖'
-    },
-    {
-      id: 6,
-      title: 'Financial Accounting Principles',
-      description: 'Comprehensive guide to accounting principles, financial statements, and analysis.',
-      category: 'Business',
-      author: 'Prof. Lisa Zhang',
-      university: 'Wharton',
-      uploadDate: '2024-03-03',
-      downloads: 445,
-      rating: 4.5,
-      type: 'PDF',
-      size: '19.4 MB',
-      tags: ['Accounting', 'Finance', 'Business'],
-      thumbnail: '📊'
+  // Load materials from localStorage (admin uploads) on component mount
+  useEffect(() => {
+    const storedMaterials = JSON.parse(localStorage.getItem('zesho-materials') || '[]');
+    
+    // If no admin materials exist, show some sample materials
+    if (storedMaterials.length === 0) {
+      const sampleMaterials = [
+        {
+          id: 1,
+          title: 'Advanced Data Structures and Algorithms',
+          description: 'Comprehensive guide covering trees, graphs, dynamic programming, and optimization techniques.',
+          category: 'Computer Science',
+          author: 'Dr. Sarah Johnson',
+          university: 'MIT',
+          uploadDate: '2024-03-15',
+          downloads: 1247,
+          rating: 4.8,
+          type: 'PDF',
+          size: '15.2 MB',
+          tags: ['Algorithms', 'Data Structures', 'Programming'],
+          thumbnail: '📊'
+        },
+        {
+          id: 2,
+          title: 'Calculus I Complete Notes',
+          description: 'Full semester notes covering limits, derivatives, integrals, and applications.',
+          category: 'Mathematics',
+          author: 'Prof. Michael Chen',
+          university: 'Stanford',
+          uploadDate: '2024-03-12',
+          downloads: 892,
+          rating: 4.9,
+          type: 'PDF',
+          size: '23.5 MB',
+          tags: ['Calculus', 'Mathematics', 'Derivatives'],
+          thumbnail: '📐'
+        },
+        {
+          id: 3,
+          title: 'Quantum Physics Laboratory Manual',
+          description: 'Practical experiments and theoretical background for quantum mechanics lab.',
+          category: 'Physics',
+          author: 'Dr. Elena Rodriguez',
+          university: 'Caltech',
+          uploadDate: '2024-03-10',
+          downloads: 634,
+          rating: 4.7,
+          type: 'PDF',
+          size: '18.7 MB',
+          tags: ['Quantum Physics', 'Laboratory', 'Experiments'],
+          thumbnail: '⚛️'
+        }
+      ];
+      setMaterials(sampleMaterials);
+    } else {
+      setMaterials(storedMaterials);
     }
-  ];
+  }, []);
+
+  // Handle material download
+  const handleDownload = (materialId) => {
+    // Increment download count
+    const updatedMaterials = materials.map(material => {
+      if (material.id === materialId) {
+        return { ...material, downloads: material.downloads + 1 };
+      }
+      return material;
+    });
+    
+    setMaterials(updatedMaterials);
+    
+    // Update localStorage
+    localStorage.setItem('zesho-materials', JSON.stringify(updatedMaterials));
+    
+    // In a real app, this would trigger actual file download
+    alert('Download started! (This is a demo - no actual file download)');
+  };
 
   const categories = ['all', 'Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Business', 'Engineering', 'Biology'];
 
@@ -273,7 +259,10 @@ const MaterialsPage = () => {
 
                   {/* Actions */}
                   <div className="flex space-x-3">
-                    <button className="flex-1 btn-primary py-3 text-sm font-medium !text-white">
+                    <button 
+                      onClick={() => handleDownload(material.id)}
+                      className="flex-1 btn-primary py-3 text-sm font-medium !text-white"
+                    >
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
@@ -314,18 +303,22 @@ const MaterialsPage = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-violet-600/90 to-purple-600/90 rounded-3xl"></div>
             <div className="relative z-10">
               <h2 className="text-4xl font-bold mb-6 text-white">
-                Have Great Study Materials?
+                Explore More Resources
               </h2>
               <p className="text-xl text-violet-100 mb-8 max-w-2xl mx-auto">
-                Share your knowledge with fellow students and help build our growing library of educational resources.
+                Discover high-quality educational materials shared by verified contributors in our growing academic library.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="btn-secondary px-8 py-4 bg-white !text-violet-700 hover:bg-gray-100 hover:!text-violet-800 font-semibold shadow-lg">
-                  Upload Resource
-                </button>
-                <button className="btn-primary px-8 py-4 bg-violet-700 hover:bg-violet-800 border border-violet-500 !text-white font-semibold shadow-lg">
-                  Learn More
-                </button>
+                <Link to="/categories">
+                  <button className="btn-secondary px-8 py-4 bg-white !text-violet-700 hover:bg-gray-100 hover:!text-violet-800 font-semibold shadow-lg">
+                    Browse Categories
+                  </button>
+                </Link>
+                <Link to="/about">
+                  <button className="btn-primary px-8 py-4 bg-violet-700 hover:bg-violet-800 border border-violet-500 !text-white font-semibold shadow-lg">
+                    Learn More
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

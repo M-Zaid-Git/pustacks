@@ -1,93 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { categoriesAPI } from '../../services/apiService';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 
-const categories = [
-  {
-    id: 1,
-    name: 'Computer Science',
-    icon: '💻',
-    description: 'Programming, algorithms, data structures, and software engineering',
-    resourceCount: 1247,
-    color: 'from-blue-500 to-cyan-500',
-    bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-    subjects: ['Programming', 'Data Structures', 'Algorithms', 'Software Engineering', 'Web Development']
-  },
-  {
-    id: 2,
-    name: 'Mathematics',
-    icon: '📐',
-    description: 'Calculus, algebra, statistics, discrete mathematics, and more',
-    resourceCount: 892,
-    color: 'from-green-500 to-emerald-500',
-    bgColor: 'bg-green-50 dark:bg-green-900/20',
-    subjects: ['Calculus', 'Linear Algebra', 'Statistics', 'Discrete Math', 'Probability']
-  },
-  {
-    id: 3,
-    name: 'Physics',
-    icon: '⚛️',
-    description: 'Classical mechanics, quantum physics, thermodynamics, and optics',
-    resourceCount: 634,
-    color: 'from-purple-500 to-pink-500',
-    bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-    subjects: ['Mechanics', 'Quantum Physics', 'Thermodynamics', 'Optics', 'Electromagnetism']
-  },
-  {
-    id: 4,
-    name: 'Chemistry',
-    icon: '🧪',
-    description: 'Organic, inorganic, physical chemistry, and biochemistry',
-    resourceCount: 567,
-    color: 'from-orange-500 to-red-500',
-    bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-    subjects: ['Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry', 'Biochemistry', 'Analytical Chemistry']
-  },
-  {
-    id: 5,
-    name: 'Engineering',
-    icon: '⚙️',
-    description: 'Mechanical, electrical, civil, and chemical engineering',
-    resourceCount: 723,
-    color: 'from-indigo-500 to-blue-500',
-    bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
-    subjects: ['Mechanical Engineering', 'Electrical Engineering', 'Civil Engineering', 'Chemical Engineering', 'Computer Engineering']
-  },
-  {
-    id: 6,
-    name: 'Business',
-    icon: '📊',
-    description: 'Management, finance, marketing, and entrepreneurship',
-    resourceCount: 445,
-    color: 'from-yellow-500 to-orange-500',
-    bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
-    subjects: ['Management', 'Finance', 'Marketing', 'Entrepreneurship', 'Economics']
-  },
-  {
-    id: 7,
-    name: 'Biology',
-    icon: '🧬',
-    description: 'Molecular biology, genetics, ecology, and biotechnology',
-    resourceCount: 398,
-    color: 'from-teal-500 to-green-500',
-    bgColor: 'bg-teal-50 dark:bg-teal-900/20',
-    subjects: ['Molecular Biology', 'Genetics', 'Ecology', 'Biotechnology', 'Cell Biology']
-  },
-  {
-    id: 8,
-    name: 'Literature',
-    icon: '📚',
-    description: 'English literature, creative writing, and literary analysis',
-    resourceCount: 267,
-    color: 'from-pink-500 to-rose-500',
-    bgColor: 'bg-pink-50 dark:bg-pink-900/20',
-    subjects: ['English Literature', 'Creative Writing', 'Literary Analysis', 'Poetry', 'Drama']
-  }
-];
-
 const Categories = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const loadCategories = async () => {
+    try {
+      const response = await categoriesAPI.getCategories();
+      setCategories(response.categories || []);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      // Fallback to static categories if API fails
+      setCategories([
+        {
+          id: 1,
+          name: 'Programming & Computer Science',
+          icon: '💻',
+          description: 'Code, algorithms, software development resources',
+          materialCount: 0,
+          color: 'from-blue-500 to-cyan-500',
+          bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+          subjects: ['Programming', 'Data Structures', 'Algorithms', 'Software Engineering', 'Web Development']
+        },
+        {
+          id: 2,
+          name: 'Mathematics',
+          icon: '📐',
+          description: 'Math concepts, formulas, problem sets',
+          materialCount: 0,
+          color: 'from-green-500 to-emerald-500',
+          bgColor: 'bg-green-50 dark:bg-green-900/20',
+          subjects: ['Calculus', 'Linear Algebra', 'Statistics', 'Discrete Math', 'Probability']
+        },
+        {
+          id: 3,
+          name: 'Science & Engineering',
+          icon: '🔬',
+          description: 'Physics, chemistry, biology, engineering materials',
+          materialCount: 0,
+          color: 'from-purple-500 to-pink-500',
+          bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+          subjects: ['Physics', 'Chemistry', 'Biology', 'Engineering', 'Research']
+        },
+        {
+          id: 4,
+          name: 'Business & Economics',
+          icon: '📊',
+          description: 'Business cases, economic theories, market analysis',
+          materialCount: 0,
+          color: 'from-orange-500 to-red-500',
+          bgColor: 'bg-orange-50 dark:bg-orange-900/20',
+          subjects: ['Management', 'Finance', 'Marketing', 'Entrepreneurship', 'Economics']
+        },
+        {
+          id: 5,
+          name: 'Literature & Humanities',
+          icon: '📚',
+          description: 'Books, essays, historical documents',
+          materialCount: 0,
+          color: 'from-indigo-500 to-blue-500',
+          bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
+          subjects: ['Literature', 'History', 'Philosophy', 'Languages', 'Arts']
+        },
+        {
+          id: 6,
+          name: 'Research Papers',
+          icon: '�',
+          description: 'Academic papers, thesis, research documents',
+          materialCount: 0,
+          color: 'from-yellow-500 to-orange-500',
+          bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
+          subjects: ['Research', 'Academic Papers', 'Thesis', 'Publications', 'Studies']
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredCategories = categories.filter(category =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -159,7 +157,7 @@ const Categories = () => {
                   {/* Stats */}
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                      {category.resourceCount} resources
+                      {category.materialCount || 0} resources
                     </span>
                     <div className="w-8 h-8 bg-gray-200 dark:bg-slate-700 rounded-full flex items-center justify-center group-hover:bg-violet-100 dark:group-hover:bg-violet-900/50 transition-colors duration-300">
                       <svg className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-violet-600 dark:group-hover:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
