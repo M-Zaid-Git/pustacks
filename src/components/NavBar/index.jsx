@@ -40,6 +40,13 @@ const NavBar = () => {
               <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-violet-600 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-full"></div>
             </Link>
             <Link 
+              to="/books" 
+              className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-white/80 dark:hover:bg-slate-700/80 transition-all duration-300 relative group"
+            >
+              Books
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-violet-600 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-full"></div>
+            </Link>
+            <Link 
               to="/about" 
               className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-white/80 dark:hover:bg-slate-700/80 transition-all duration-300 relative group"
             >
@@ -106,6 +113,13 @@ const NavBar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Categories
+              </Link>
+              <Link 
+                to="/books" 
+                className="text-gray-600 hover:text-violet-600 dark:text-gray-300 dark:hover:text-violet-400 font-medium transition-all duration-300 px-4 py-3 rounded-xl hover:bg-violet-50/50 dark:hover:bg-violet-900/20 backdrop-blur-sm"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Books
               </Link>
               <Link 
                 to="/about" 
