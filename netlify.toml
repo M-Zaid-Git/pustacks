@@ -1,4 +1,4 @@
-# netlify.toml - Configuration file for Netlify deployments
+# netlify.toml - ZESHO Platform Deployment Configuration
 
 [build]
   # Directory to publish (the folder that contains the built site)
@@ -11,20 +11,26 @@
 [[plugins]]
   package = "./netlify/plugins/environment-plugin"
 
-# API redirects
+# API redirects for serverless functions
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
   force = true
 
-# Redirects for SPA (Single Page Application) routing
+# Admin panel redirects
+[[redirects]]
+  from = "/admin/*"
+  to = "/index.html"
+  status = 200
+
+# SPA (Single Page Application) routing redirects
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Headers for security and caching
+# Security and performance headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -32,8 +38,22 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self' *.cloudinary.com; script-src 'self' 'unsafe-inline' *.googleapis.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: blob: *.cloudinary.com; font-src 'self' data: *.googleapis.com *.gstatic.com; connect-src 'self' *.cloudinary.com *.netlify.app *.netlify.com;"
+    Content-Security-Policy = "default-src 'self' *.cloudinary.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: blob: *.cloudinary.com; font-src 'self' data: *.googleapis.com *.gstatic.com; connect-src 'self' *.cloudinary.com *.netlify.app *.netlify.com;"
 
-# Environment variables - NOTE: Set sensitive values in Netlify UI, not here!
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images
+[[headers]]
+  for = "/*.{jpg,jpeg,png,gif,webp,svg,ico}"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Environment variables for build
 [build.environment]
   NODE_VERSION = "18"
+  VITE_APP_NAME = "ZESHO"
+  VITE_APP_DESCRIPTION = "Educational Resources Platform"
