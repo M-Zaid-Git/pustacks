@@ -75,9 +75,15 @@ After adding environment variables:
 ## Troubleshooting
 
 ### Build Fails
-- Check if all dependencies are installed
-- Verify environment variables are set
+- Check if all dependencies are installed: `npm install`
+- Verify environment variables are set in Netlify dashboard
 - Check build logs for specific errors
+- Ensure build command is `npm run build` and publish directory is `dist`
+
+### Netlify Plugin Errors
+- If you see "manifest.yml" errors, the custom environment plugin has been removed
+- Set environment variables directly in Netlify dashboard instead
+- Check that netlify.toml doesn't reference missing plugins
 
 ### Upload Preset Not Found
 - Ensure preset name is exactly `zesho_uploads`
@@ -85,9 +91,10 @@ After adding environment variables:
 - Check Cloudinary console for preset creation
 
 ### File Uploads Fail
-- Verify all environment variables are correct
+- Verify all environment variables are correct in Netlify dashboard
 - Check browser console for errors
 - Ensure upload preset is created and configured
+- Test locally first with `npm run dev`
 
 ### Admin Panel Access Issues
 - URL should be: `your-site.netlify.app/admin/login`

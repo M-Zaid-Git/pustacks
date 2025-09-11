@@ -7,9 +7,6 @@
   command = "npm run build"
   # Serverless functions directory
   functions = "netlify/functions"
-  
-[[plugins]]
-  package = "./netlify/plugins/environment-plugin"
 
 # API redirects for serverless functions
 [[redirects]]
