@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from '../../components/NavBar';
+import SimpleUploadModal from '../../components/UploadModal/SimpleUpload';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [notifications, setNotifications] = useState([]);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   // Mock user data with enhanced profile
   const user = {
@@ -37,41 +39,47 @@ const Dashboard = () => {
     { id: 4, type: 'achievement', title: 'Earned "Knowledge Sharer" badge', subject: 'Achievement', time: '2 days ago', points: '+50' }
   ];
 
-  const myUploads = [
-    { 
-      id: 1, 
-      title: 'Advanced React Patterns & Best Practices', 
-      subject: 'Web Development', 
-      uploadDate: '2024-03-15', 
-      downloads: 42, 
-      rating: 4.8, 
-      status: 'Published',
-      size: '2.4 MB',
-      type: 'PDF'
-    },
-    { 
-      id: 2, 
-      title: 'Database Design Fundamentals', 
-      subject: 'Computer Science', 
-      uploadDate: '2024-03-12', 
-      downloads: 28, 
-      rating: 4.6, 
-      status: 'Published',
-      size: '1.8 MB',
-      type: 'PDF'
-    },
-    { 
-      id: 3, 
-      title: 'Linear Algebra Study Notes', 
-      subject: 'Mathematics', 
-      uploadDate: '2024-03-08', 
-      downloads: 35, 
-      rating: 4.9, 
-      status: 'Published',
-      size: '3.2 MB',
-      type: 'PDF'
-    }
-  ];
+  // Load user uploads from localStorage
+  const loadUserUploads = () => {
+    const saved = localStorage.getItem('zesho-user-uploads');
+    return saved ? JSON.parse(saved) : [
+      { 
+        id: 1, 
+        title: 'Advanced React Patterns & Best Practices', 
+        subject: 'Web Development', 
+        uploadDate: '2024-03-15', 
+        downloads: 42, 
+        rating: 4.8, 
+        status: 'Published',
+        size: '2.4 MB',
+        type: 'PDF'
+      },
+      { 
+        id: 2, 
+        title: 'Database Design Fundamentals', 
+        subject: 'Computer Science', 
+        uploadDate: '2024-03-12', 
+        downloads: 28, 
+        rating: 4.6, 
+        status: 'Published',
+        size: '1.8 MB',
+        type: 'PDF'
+      },
+      { 
+        id: 3, 
+        title: 'Linear Algebra Study Notes', 
+        subject: 'Mathematics', 
+        uploadDate: '2024-03-08', 
+        downloads: 35, 
+        rating: 4.9, 
+        status: 'Published',
+        size: '3.2 MB',
+        type: 'PDF'
+      }
+    ];
+  };
+
+  const [myUploads, setMyUploads] = useState(loadUserUploads());
 
   const studyGoals = [
     { id: 1, title: 'Complete Data Science Course', progress: 75, deadline: '2024-04-15', priority: 'high' },
@@ -330,7 +338,10 @@ const Dashboard = () => {
                         </svg>
                       </div>
                     </div>
-                    <button className="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium hover:from-indigo-600 hover:to-purple-600 transition-all duration-200">
+                    <button 
+                      onClick={() => setIsUploadModalOpen(true)}
+                      className="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium hover:from-indigo-600 hover:to-purple-600 transition-all duration-200"
+                    >
                       + Upload New
                     </button>
                   </div>
@@ -486,6 +497,12 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Upload Modal */}
+      <SimpleUploadModal 
+        isOpen={isUploadModalOpen} 
+        onClose={() => setIsUploadModalOpen(false)} 
+      />
     </div>
   );
 };

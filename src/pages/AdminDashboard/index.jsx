@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CloudinaryUpload from '../../components/Admin/CloudinaryUpload';
 
 const AdminDashboard = () => {
   const [materials, setMaterials] = useState([]);
@@ -12,7 +13,9 @@ const AdminDashboard = () => {
     university: '',
     type: 'PDF',
     tags: '',
-    file: null,
+    fileUrl: '',
+    fileName: '',
+    fileSize: 0,
     thumbnail: '📊'
   });
   const [isUploading, setIsUploading] = useState(false);
@@ -50,6 +53,23 @@ const AdminDashboard = () => {
     navigate('/');
   };
 
+  const handleUploadSuccess = (fileInfo) => {
+    setUploadForm(prev => ({
+      ...prev,
+      fileUrl: fileInfo.url,
+      fileName: fileInfo.originalName,
+      fileSize: fileInfo.size,
+      type: fileInfo.format ? fileInfo.format.toUpperCase() : 'FILE'
+    }));
+    
+    console.log('File uploaded successfully to Cloudinary:', fileInfo);
+  };
+
+  const handleUploadError = (error) => {
+    alert(`Upload failed: ${error}`);
+    console.error('Upload error:', error);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUploadForm(prev => ({
@@ -58,29 +78,27 @@ const AdminDashboard = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setUploadForm(prev => ({
-      ...prev,
-      file: file
-    }));
-  };
-
   const handleUpload = async (e) => {
     e.preventDefault();
+    
+    if (!uploadForm.fileUrl) {
+      alert('Please upload a file first using the upload area above');
+      return;
+    }
+
     setIsUploading(true);
 
-    // Simulate upload delay
-    setTimeout(() => {
+    try {
       const newMaterial = {
         id: Date.now(),
         ...uploadForm,
         uploadDate: new Date().toISOString().split('T')[0],
         downloads: 0,
-        rating: 5.0,
-        size: uploadForm.file ? `${(uploadForm.file.size / (1024 * 1024)).toFixed(1)} MB` : '0 MB',
+        rating: (Math.random() * 2 + 3).toFixed(1), // Random rating between 3-5
+        size: uploadForm.fileSize ? `${(uploadForm.fileSize / (1024 * 1024)).toFixed(1)} MB` : '0 MB',
         tags: uploadForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-        adminUploaded: true
+        adminUploaded: true,
+        cloudinaryUrl: uploadForm.fileUrl
       };
 
       const updatedMaterials = [newMaterial, ...materials];
@@ -98,13 +116,20 @@ const AdminDashboard = () => {
         university: '',
         type: 'PDF',
         tags: '',
-        file: null,
+        fileUrl: '',
+        fileName: '',
+        fileSize: 0,
         thumbnail: '📊'
       });
       
       setShowUploadForm(false);
+      alert('Material uploaded successfully to Cloudinary and saved!');
+    } catch (error) {
+      console.error('Error saving material:', error);
+      alert('Error saving material. Please try again.');
+    } finally {
       setIsUploading(false);
-    }, 2000);
+    }
   };
 
   const handleDeleteMaterial = (id) => {
@@ -132,7 +157,7 @@ const AdminDashboard = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">ZESHO Admin Panel</h1>
-                <p className="text-gray-300 text-sm">Material Management System</p>
+                <p className="text-gray-300 text-sm">Material Management with Cloudinary Storage</p>
               </div>
             </div>
             
@@ -218,6 +243,38 @@ const AdminDashboard = () => {
 
           {showUploadForm && (
             <form onSubmit={handleUpload} className="space-y-6 bg-black/20 rounded-xl p-6">
+              {/* Cloudinary Upload Component */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Upload File to Cloudinary</label>
+                <CloudinaryUpload 
+                  onUploadSuccess={handleUploadSuccess}
+                  onUploadError={handleUploadError}
+                />
+              </div>
+
+              {/* Show upload status */}
+              {uploadForm.fileUrl && (
+                <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-4">
+                  <div className="flex items-center">
+                    <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-green-400 font-medium">File uploaded successfully to Cloudinary!</span>
+                  </div>
+                  <p className="text-green-300 text-sm mt-1">
+                    {uploadForm.fileName} ({uploadForm.fileSize ? (uploadForm.fileSize / 1024 / 1024).toFixed(2) + ' MB' : 'Unknown size'})
+                  </p>
+                  <a 
+                    href={uploadForm.fileUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-400 hover:text-blue-300 hover:underline"
+                  >
+                    View file on Cloudinary
+                  </a>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
@@ -331,28 +388,20 @@ const AdminDashboard = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">File</label>
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-purple-600 file:text-white hover:file:bg-purple-700"
-                  accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.avi,.mov"
-                />
-              </div>
-
               <button
                 type="submit"
-                disabled={isUploading}
+                disabled={isUploading || !uploadForm.fileUrl}
                 className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {isUploading ? (
                   <div className="flex items-center justify-center">
                     <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2"></div>
-                    Uploading Material...
+                    Saving Material...
                   </div>
+                ) : !uploadForm.fileUrl ? (
+                  'Upload File First'
                 ) : (
-                  'Upload Material'
+                  'Save Material'
                 )}
               </button>
             </form>
@@ -394,6 +443,18 @@ const AdminDashboard = () => {
                         </div>
                         <div className="text-sm text-gray-400">
                           By {material.author} • {material.university} • {material.uploadDate}
+                          {material.cloudinaryUrl && (
+                            <div className="mt-1">
+                              <a 
+                                href={material.cloudinaryUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-400 hover:text-blue-300 hover:underline text-xs"
+                              >
+                                📁 View file on Cloudinary
+                              </a>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

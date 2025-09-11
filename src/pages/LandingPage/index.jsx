@@ -4,11 +4,11 @@ import Content from '../../components/content';
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-950 transition-all duration-300">
       <NavBar />
       
-      {/* Main Content */}
-      <main className="">
+      {/* Modern seamless layout without harsh padding */}
+      <main className="pt-16 md:pt-20">
         <HeroSection />
         <Content />
       </main>

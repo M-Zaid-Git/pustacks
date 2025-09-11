@@ -8,7 +8,7 @@ const About = () => {
       <NavBar />
       
       {/* Hero Section */}
-      <div className="relative overflow-hidden pt-24 pb-16">
+      <div className="relative overflow-hidden pt-20 md:pt-24 pb-16">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-purple-600/10 dark:from-violet-600/20 dark:to-purple-600/20"></div>
         <div className="relative container mx-auto px-6">
           <div className="text-center mb-16">

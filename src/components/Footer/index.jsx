@@ -117,10 +117,10 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-300 block py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm group">
+                <Link to="/admin/login" className="text-gray-300 hover:text-white hover:translate-x-2 transition-all duration-300 block py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm group">
                   <span className="flex items-center">
                     <span className="w-2 h-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                    Dashboard
+                    Admin
                   </span>
                 </Link>
               </li>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 
 const MaterialsPage = () => {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -11,6 +12,18 @@ const MaterialsPage = () => {
 
   // Load materials from localStorage (admin uploads) on component mount
   useEffect(() => {
+    // Get search parameter from URL if it exists
+    const urlSearch = searchParams.get('search');
+    const urlCategory = searchParams.get('category');
+    
+    if (urlSearch) {
+      setSearchTerm(urlSearch);
+    }
+    
+    if (urlCategory) {
+      setSelectedCategory(urlCategory);
+    }
+
     const storedMaterials = JSON.parse(localStorage.getItem('zesho-materials') || '[]');
     
     // If no admin materials exist, show some sample materials
@@ -66,16 +79,18 @@ const MaterialsPage = () => {
     } else {
       setMaterials(storedMaterials);
     }
-  }, []);
+  }, [searchParams]); // Added searchParams dependency
 
   // Handle material download
   const handleDownload = (materialId) => {
+    const material = materials.find(m => m.id === materialId);
+    
     // Increment download count
-    const updatedMaterials = materials.map(material => {
-      if (material.id === materialId) {
-        return { ...material, downloads: material.downloads + 1 };
+    const updatedMaterials = materials.map(mat => {
+      if (mat.id === materialId) {
+        return { ...mat, downloads: mat.downloads + 1 };
       }
-      return material;
+      return mat;
     });
     
     setMaterials(updatedMaterials);
@@ -83,11 +98,42 @@ const MaterialsPage = () => {
     // Update localStorage
     localStorage.setItem('zesho-materials', JSON.stringify(updatedMaterials));
     
-    // In a real app, this would trigger actual file download
-    alert('Download started! (This is a demo - no actual file download)');
+    // Create a demo download for demonstration
+    const demoContent = `
+# ${material.title}
+
+**Author:** ${material.author}
+**University:** ${material.university}
+**Category:** ${material.category}
+**Upload Date:** ${material.uploadDate}
+
+## Description
+${material.description}
+
+## Tags
+${material.tags.join(', ')}
+
+---
+This is a demo file from ZESHO Educational Platform.
+In a real application, this would be the actual academic resource.
+    `;
+    
+    // Create and trigger download
+    const blob = new Blob([demoContent], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${material.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    // Show success notification
+    alert(`✅ "${material.title}" downloaded successfully!`);
   };
 
-  const categories = ['all', 'Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Business', 'Engineering', 'Biology'];
+  const categories = ['all', 'Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Business', 'Engineering', 'Biology', 'Academics', 'Competitive Exams'];
 
   const filteredMaterials = materials.filter(material => {
     const matchesSearch = material.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -119,7 +165,7 @@ const MaterialsPage = () => {
       <NavBar />
       
       {/* Hero Section */}
-      <div className="relative overflow-hidden pt-24 pb-16">
+      <div className="relative overflow-hidden pt-20 md:pt-24 pb-16">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-purple-600/10 dark:from-violet-600/20 dark:to-purple-600/20"></div>
         <div className="relative container mx-auto px-6">
           <div className="text-center mb-12">
@@ -261,15 +307,16 @@ const MaterialsPage = () => {
                   <div className="flex space-x-3">
                     <button 
                       onClick={() => handleDownload(material.id)}
-                      className="flex-1 btn-primary py-3 text-sm font-medium !text-white"
+                      className="group relative flex-1 inline-flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transform hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
                     >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                      <svg className="w-4 h-4 mr-2 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
-                      Download
+                      <span className="relative z-10">Download</span>
                     </button>
-                    <button className="btn-secondary p-3 !text-violet-600 hover:!text-violet-700">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button className="group p-3 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-800 rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transform hover:-translate-y-0.5 transition-all duration-200">
+                      <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                       </svg>
                     </button>

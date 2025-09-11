@@ -9,18 +9,11 @@ const NavBar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-slate-900/80 backdrop-blur-2xl border-b border-gray-200/20 dark:border-slate-700/30 shadow-xl">
       <div className="container mx-auto px-8 py-6">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-4 group">
-            <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-violet-600 via-purple-600 to-blue-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl">
-                <span className="text-white font-bold text-xl">Z</span>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-600 via-purple-600 to-blue-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-300"></div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">ZESHO</span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 -mt-1">Learn • Share • Grow</span>
-            </div>
+          {/* Simplified Logo */}
+          <Link to="/" className="flex items-center group">
+            <span className="text-2xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 transition-all duration-300">
+              ZESHO
+            </span>
           </Link>
 
           {/* Desktop Navigation */}

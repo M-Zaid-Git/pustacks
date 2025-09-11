@@ -32,12 +32,31 @@ const Uploads = () => {
                     <div className="bg-black/[0.68] m-1 px-5 py-1 text-sm rounded-2xl text-white">Book</div>
                     <div className="bg-black/[0.68] m-1 px-5 py-1 text-sm rounded-2xl text-white">Quiz</div>
                   </div>
-                  <div className="flex items-end justify-end w-full h-28">
-                    <button className="theme-btn-shadow m-2 px-5 py-2 bg-[#3B82F6] shadow-[0px_4px_11.3333px_rgba(0,0,0,0.25)] text-white rounded-lg">
+                  <div className="flex items-end justify-end w-full h-28 space-x-3">
+                    <button 
+                      onClick={() => {
+                        // Create demo download
+                        const demoContent = `# Linear Algebra Notes\n\nThis is a demo file from ZESHO Educational Platform.\nIn a real application, this would be the actual academic resource.\n\nTags: NKM notes, Midsems, Book, Quiz`;
+                        const blob = new Blob([demoContent], { type: 'text/plain' });
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = 'linear_algebra_notes.txt';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
+                        alert('✅ Linear Algebra notes downloaded successfully!');
+                      }}
+                      className="group relative inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transform hover:-translate-y-0.5 transition-all duration-200"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
                       Download
                     </button>
                     <a href="/details/1">
-                      <button className="theme-btn-shadow m-2 px-5 py-2 bg-[#3B82F6] shadow-[0px_4px_11.3333px_rgba(0,0,0,0.25)] text-white rounded-lg">
+                      <button className="px-6 py-3 text-sm font-semibold text-indigo-600 bg-white border-2 border-indigo-200 rounded-xl shadow-lg hover:shadow-xl hover:border-indigo-300 transform hover:-translate-y-0.5 transition-all duration-200">
                         Details
                       </button>
                     </a>

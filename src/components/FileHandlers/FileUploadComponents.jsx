@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db, firebaseConfig } from '../../firebase/ClientApp.mjs';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, getFirestore } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 
 // Initialize Firebase
