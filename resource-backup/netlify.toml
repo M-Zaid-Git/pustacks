@@ -1,0 +1,39 @@
+# netlify.toml - Configuration file for Netlify deployments
+
+[build]
+  # Directory to publish (the folder that contains the built site)
+  publish = "dist"
+  # Build command
+  command = "npm run build"
+  # Serverless functions directory
+  functions = "netlify/functions"
+  
+[[plugins]]
+  package = "./netlify/plugins/environment-plugin"
+
+# API redirects
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+# Redirects for SPA (Single Page Application) routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and caching
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self' *.cloudinary.com; script-src 'self' 'unsafe-inline' *.googleapis.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: blob: *.cloudinary.com; font-src 'self' data: *.googleapis.com *.gstatic.com; connect-src 'self' *.cloudinary.com *.netlify.app *.netlify.com;"
+
+# Environment variables - NOTE: Set sensitive values in Netlify UI, not here!
+[build.environment]
+  NODE_VERSION = "18"

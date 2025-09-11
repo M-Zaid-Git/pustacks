@@ -1,0 +1,591 @@
+@import url('./fonts.css');
+@import url('./navbar.css');
+@import url('./scrollbar.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+:root {
+  /* ZESHO Brand Colors - Light Mode */
+  --primary-color: #1e293b; /* Slate 800 - for primary text */
+  --secondary-color: #2563eb; /* Blue 600 - for secondary elements */
+  --accent-color: #8b5cf6; /* Violet 500 - for accents */
+  --page-color: #f8fafc; /* Slate 50 - for background */
+  --back-shadow: #64748b; /* Slate 500 */
+  --front-edge: #475569; /* Slate 600 */
+
+  /* Brand colors */
+  --zesho-blue: #2563eb; /* Main brand color - Blue 600 */
+  --zesho-purple: #8b5cf6; /* Secondary brand color - Violet 500 */
+  --zesho-pink: #db2777; /* Pink 600 - brand accent */
+  --zesho-teal: #0d9488; /* Teal 600 - fresh accent */
+
+  /* Button gradients */
+  --gradient-blue: linear-gradient(135deg, #2563eb, #1d4ed8);
+  --gradient-purple: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  --gradient-mixed: linear-gradient(135deg, #2563eb, #8b5cf6);
+  --gradient-accent: linear-gradient(135deg, #8b5cf6, #db2777);
+
+  /* Text colors */
+  --text-primary: #1e293b; /* Slate 800 - main text */
+  --text-secondary: #475569; /* Slate 600 - secondary text */
+  --text-dull: #64748b; /* Slate 500 - muted text */
+  --text-bright: #f8fafc; /* Slate 50 - bright text for dark backgrounds */
+
+  /* UI Elements */
+  --box-shadow: rgba(15, 23, 42, 0.1); /* Modern subtle shadow */
+  --button-shadow: rgba(37, 99, 235, 0.25); /* Blue shadow with opacity */
+  --text-shadow: rgba(15, 23, 42, 0.05); /* Very subtle text shadow */
+  --error-bg: #ef4444; /* Red 500 */
+  --success-bg: #22c55e; /* Green 500 */
+
+  /* Form elements */
+  --form-bg: #ffffff; /* Pure white for forms */
+  --form-border: #e2e8f0; /* Slate 200 */
+  --form-footer: #f1f5f9; /* Slate 100 */
+  --input-border: #cbd5e1; /* Slate 300 */
+  --input-focus: #2563eb; /* Blue 600 */
+
+  /* Cards */
+  --card-bg: #ffffff; /* White for cards */
+  --card-border: #e2e8f0; /* Slate 200 */
+  --category-card-bg: #ffffff; /* White for category cards */
+  --bookmark-bg: #8b5cf6; /* Violet 500 - matches brand */
+  --tag-bg: rgba(37, 99, 235, 0.9); /* Brand blue with opacity */
+  --tag-text: #ffffff; /* White */
+
+  /* Overlays */
+  --dark-overlay-rgb: 15, 23, 42; /* For dark overlays - Slate 900 */
+  --card-icon-filter: none; /* No filter for icons in light mode */
+}
+
+[data-theme='dark'] {
+  /* ZESHO Brand Colors - Dark Mode */
+  --primary-color: #f1f5f9; /* Slate 100 - for text */
+  --secondary-color: #3b82f6; /* Blue 500 - brighter in dark mode */
+  --accent-color: #a78bfa; /* Violet 400 - brighter in dark mode */
+  --page-color: #0f172a; /* Slate 900 - for background */
+  --back-shadow: #1e293b; /* Slate 800 */
+  --front-edge: #334155; /* Slate 700 */
+
+  /* Brand colors */
+  --zesho-blue: #3b82f6; /* Blue 500 - brighter in dark mode */
+  --zesho-purple: #a78bfa; /* Violet 400 - brighter in dark mode */
+  --zesho-pink: #ec4899; /* Pink 500 - brighter in dark mode */
+  --zesho-teal: #2dd4bf; /* Teal 400 - brighter in dark mode */
+
+  /* Button gradients */
+  --gradient-blue: linear-gradient(135deg, #3b82f6, #2563eb);
+  --gradient-purple: linear-gradient(135deg, #a78bfa, #8b5cf6);
+  --gradient-mixed: linear-gradient(135deg, #3b82f6, #a78bfa);
+  --gradient-accent: linear-gradient(135deg, #a78bfa, #ec4899);
+
+  /* Text colors */
+  --text-primary: #f1f5f9; /* Slate 100 - main text */
+  --text-secondary: #cbd5e1; /* Slate 300 - secondary text */
+  --text-dull: #94a3b8; /* Slate 400 - muted text */
+  --text-bright: #ffffff; /* White - bright text */
+
+  /* UI Elements */
+  --box-shadow: rgba(0, 0, 0, 0.3); /* Darker shadow for dark mode */
+  --button-shadow: rgba(59, 130, 246, 0.4); /* Blue shadow with opacity */
+  --text-shadow: rgba(0, 0, 0, 0.3); /* Subtle text shadow */
+  --error-bg: #ef4444; /* Red 500 */
+  --success-bg: #22c55e; /* Green 500 */
+
+  /* Form elements */
+  --form-bg: #1e293b; /* Slate 800 for forms */
+  --form-border: #334155; /* Slate 700 */
+  --form-footer: #0f172a; /* Slate 900 */
+  --input-border: #475569; /* Slate 600 */
+  --input-focus: #3b82f6; /* Blue 500 */
+
+  /* Cards */
+  --card-bg: #1e293b; /* Slate 800 - for cards */
+  --card-border: #334155; /* Slate 700 */
+  --category-card-bg: #1e293b; /* Slate 800 - for category cards */
+  --bookmark-bg: #a78bfa; /* Violet 400 - matches brand */
+  --tag-bg: rgba(59, 130, 246, 0.9); /* Brand blue with opacity */
+  --tag-text: #ffffff; /* White */
+
+  /* Overlays */
+  --dark-overlay-rgb: 0, 0, 0; /* Pure black for overlays */
+  --card-icon-filter: brightness(1.2); /* Slight brightness increase for icons in dark mode */
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+}
+
+html,
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--page-color);
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  cursor: default;
+  color: var(--text-primary) !important;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+li {
+  list-style: none;
+}
+
+/* Modern button styles */
+.zesho-btn {
+  position: relative;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px var(--button-shadow);
+}
+
+.zesho-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.4s ease-in-out;
+}
+
+.zesho-btn:hover::before {
+  left: 100%;
+}
+
+.zesho-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--button-shadow);
+}
+
+.zesho-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px var(--button-shadow);
+}
+
+/* Animation classes */
+.fade-in {
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+/* Pulse animation removed */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes expandMenu {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes hemisphereExpand {
+  0% {
+    clip-path: circle(0% at calc(100% - 25px) 25px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.5;
+  }
+  100% {
+    clip-path: circle(150% at calc(100% - 25px) 25px);
+    opacity: 1;
+  }
+}
+
+@keyframes hemisphereCollapse {
+  0% {
+    clip-path: circle(150% at calc(100% - 25px) 25px);
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.5;
+  }
+  100% {
+    clip-path: circle(0% at calc(100% - 25px) 25px);
+    opacity: 0;
+  }
+}
+
+/* Full-screen menu animations */
+@keyframes menuItemFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fullScreenFadeIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(10px);
+  }
+}
+
+@keyframes fullScreenFadeOut {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(10px);
+  }
+  100% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+.slide-in-top {
+  animation: slideInTop 0.3s ease-out forwards;
+}
+
+.fade-in-scale {
+  animation: fadeInScale 0.3s ease-out forwards;
+}
+
+/* Mobile optimizations */
+@media (max-width: 531px) {
+  .zesho-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  /* Mobile menu transition */
+  .mobile-menu-enter {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  .mobile-menu-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 300ms, transform 300ms;
+  }
+
+  .mobile-menu-exit {
+    opacity: 1;
+  }
+
+  .mobile-menu-exit-active {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 300ms, transform 300ms;
+  }
+
+  /* Optimize animations for mobile */
+  .fade-in {
+    animation-duration: 0.4s;
+  }
+
+  .slide-up {
+    animation-duration: 0.4s;
+  }
+
+  /* Enhanced mobile navigation */
+  .mobile-nav-link {
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-nav-link:active {
+    transform: scale(0.98);
+  }
+
+  .mobile-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-purple);
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+  }
+
+  .mobile-nav-link:hover::after {
+    width: 80%;
+  }
+
+  /* Enhanced hamburger button effects for hemisphere animation */
+  .hamburger-btn {
+    position: relative;
+    overflow: visible;
+    z-index: 10002; /* Ensure it stays above other elements */
+  }
+
+  .hamburger-btn:hover {
+    background-color: rgba(139, 92, 246, 0.1);
+  }
+
+  .hamburger-btn:active {
+    background-color: rgba(139, 92, 246, 0.15);
+  }
+
+  .hamburger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(139, 92, 246, 0.4), transparent 70%);
+    border-radius: inherit;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: all 0.3s ease;
+  }
+
+  .hamburger-btn:active::before {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  /* Ensure focus states are visible but not overly dominant */
+  button:focus,
+  a:focus,
+  input:focus,
+  textarea:focus {
+    outline: 2px solid var(--zesho-purple);
+    outline-offset: 2px;
+  }
+
+  /* Improve touch targets */
+  a,
+  button {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Enhanced mobile drawer shadow */
+  .mobile-menu-drawer {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Mobile auth buttons enhancement */
+  .zesho-btn {
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+  }
+
+  .mobile-auth-button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mobile-auth-button:active {
+    transform: scale(0.98);
+  }
+
+  .mobile-auth-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.4s ease-in-out;
+  }
+
+  .mobile-auth-button:active::before {
+    left: 100%;
+  }
+
+  /* Mobile menu animation staggered effect - simplified */
+  .w-full.mobile-nav-link:nth-child(1) {
+    animation: slideUp 0.3s ease-out forwards;
+    animation-delay: 0.05s;
+    opacity: 0;
+  }
+
+  .w-full.mobile-nav-link:nth-child(2) {
+    animation: slideUp 0.3s ease-out forwards;
+    animation-delay: 0.1s;
+    opacity: 0;
+  }
+
+  .w-full.mobile-nav-link:nth-child(3) {
+    animation: slideUp 0.3s ease-out forwards;
+    animation-delay: 0.15s;
+    opacity: 0;
+  }
+
+  .w-full.mobile-nav-link:nth-child(4) {
+    animation: slideUp 0.3s ease-out forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+  }
+
+  /* Additional mobile navigation enhancements */
+  .mobile-nav-link {
+    position: relative;
+    border-left: 3px solid transparent;
+  }
+
+  .mobile-nav-link:active {
+    border-left: 3px solid var(--zesho-purple);
+    background-color: rgba(139, 92, 246, 0.08);
+  }
+
+  .mobile-nav-link svg {
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-nav-link:active svg {
+    transform: scale(1.2);
+  }
+
+  /* Enhanced mobile menu styling for hemisphere animation */
+  .mobile-menu-drawer {
+    position: relative;
+    overflow: hidden;
+    transform-origin: top right;
+  }
+
+  .mobile-menu-drawer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--zesho-purple), transparent);
+    opacity: 0.3;
+  }
+
+  .mobile-menu-drawer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%);
+    z-index: -1;
+  }
+
+  /* Active state for auth buttons */
+  .mobile-auth-button:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}

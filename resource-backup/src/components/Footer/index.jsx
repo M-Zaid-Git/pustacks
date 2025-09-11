@@ -1,0 +1,261 @@
+import classNames from 'classnames';
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const socials = [
+  {
+    name: 'Github',
+    svgPath:
+      'M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z',
+    viewBox: '0 0 24 24',
+    link: 'https://github.com/bsoc-bitbyte/resource-sharing',
+  },
+  {
+    name: 'LinkedIn',
+    svgPath:
+      'M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z',
+    viewBox: '-80 -50 900 900',
+    link: 'https://www.linkedin.com/company/bitbyte-tpc/',
+  },
+];
+
+const Footer = () => {
+  return (
+    <footer
+      style={{
+        backgroundColor: 'var(--form-footer)',
+        color: 'var(--text-primary)',
+        boxShadow: '0 -5px 15px var(--box-shadow)',
+      }}
+      className={classNames({
+        'w-screen min-h-[50vh] py-14': true,
+        'flex flex-col items-center justify-center gap-6': true,
+        'fade-in': true,
+        'mobile:py-8': true,
+      })}
+    >
+      <div className="relative h-fit w-screen flex flex-col items-center justify-center">
+        <div className="mb-6">
+          <Link to="/">
+            <span
+              style={{
+                background: 'var(--gradient-mixed)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontFamily: 'Montserrat, sans-serif',
+                fontWeight: 800,
+              }}
+              className="text-4xl mobile:text-3xl"
+            >
+              ZESHO
+            </span>
+          </Link>
+        </div>
+
+        <div
+          className={classNames({
+            'w-[95vw] sm:w-[48rem] mt-4': true,
+            'flex flex-col md:flex-row justify-between': true,
+          })}
+        >
+          <div
+            className={classNames({
+              'md:w-1/2 px-6': true,
+              'mobile:px-4': true,
+            })}
+          >
+            <h3
+              style={{
+                color: 'var(--text-primary)',
+                fontFamily: 'Montserrat, sans-serif',
+              }}
+              className="text-xl font-bold mb-4 mobile:text-center"
+            >
+              About ZESHO
+            </h3>
+            <p
+              style={{
+                color: 'var(--text-secondary)',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                lineHeight: '1.7',
+              }}
+              className="text-sm slide-up mobile:text-center"
+            >
+              ZESHO is a modern educational resource platform designed to empower students through knowledge sharing. We
+              facilitate collaboration and provide access to quality study materials, creating a community where
+              learning thrives.
+            </p>
+
+            <div
+              className={classNames({
+                'mt-6 flex items-center space-x-6': true,
+                'mobile:justify-center': true,
+              })}
+            >
+              {socials.map((social, index) => {
+                return (
+                  <a
+                    key={index}
+                    style={{
+                      background: 'var(--gradient-purple)',
+                      boxShadow: '0 4px 10px var(--button-shadow)',
+                      transition: 'all 0.3s ease',
+                    }}
+                    className="p-3 rounded-full flex items-center justify-center hover:opacity-90 hover:scale-110 transform transition-all"
+                    href={social.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={social.name}
+                  >
+                    <svg
+                      className="h-6 w-6 mobile:h-5 mobile:w-5"
+                      fill="currentColor"
+                      viewBox={social.viewBox}
+                      aria-hidden="true"
+                      style={{ color: 'white' }}
+                    >
+                      <path fillRule="evenodd" d={social.svgPath} clipRule="evenodd" />
+                    </svg>
+                  </a>
+                );
+              })}
+            </div>
+
+            <div
+              className={classNames({
+                'mt-8': true,
+                'mobile:text-center': true,
+              })}
+            >
+              <p
+                style={{
+                  color: 'var(--text-dull)',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                }}
+                className="text-xs"
+              >
+                Created with ♥ by Zaid | Punjab University
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={classNames({
+              'md:w-1/2 px-6 mt-10 md:mt-0': true,
+              'mobile:mt-8 mobile:px-4': true,
+            })}
+          >
+            <h3
+              style={{
+                color: 'var(--text-primary)',
+                fontFamily: 'Montserrat, sans-serif',
+              }}
+              className="text-xl font-bold mb-4 mobile:text-center"
+            >
+              Quick Links
+            </h3>
+
+            <div
+              className={classNames({
+                'grid grid-cols-2 gap-2': true,
+                'mobile:grid-cols-1 mobile:gap-0': true,
+                'mobile:w-full mobile:max-w-[280px] mobile:mx-auto': true,
+              })}
+            >
+              <Link to="/">
+                <div
+                  style={{
+                    color: 'var(--zesho-purple)',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  }}
+                  className={classNames({
+                    'flex items-center py-2 hover:translate-x-1 transition-all duration-200': true,
+                    'mobile:justify-center': true,
+                  })}
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  Home
+                </div>
+              </Link>
+
+              <Link to="/resources">
+                <div
+                  style={{
+                    color: 'var(--zesho-purple)',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  }}
+                  className={classNames({
+                    'flex items-center py-2 hover:translate-x-1 transition-all duration-200': true,
+                    'mobile:justify-center': true,
+                  })}
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  Resources
+                </div>
+              </Link>
+
+              <Link to="/login">
+                <div
+                  style={{
+                    color: 'var(--zesho-purple)',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  }}
+                  className={classNames({
+                    'flex items-center py-2 hover:translate-x-1 transition-all duration-200': true,
+                    'mobile:justify-center': true,
+                  })}
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  Login
+                </div>
+              </Link>
+
+              <Link to="/signup">
+                <div
+                  style={{
+                    color: 'var(--zesho-purple)',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  }}
+                  className={classNames({
+                    'flex items-center py-2 hover:translate-x-1 transition-all duration-200': true,
+                    'mobile:justify-center': true,
+                  })}
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  Sign Up
+                </div>
+              </Link>
+            </div>
+
+            <div
+              className={classNames({
+                'mt-8': true,
+                'mobile:text-center': true,
+              })}
+            >
+              <p
+                style={{
+                  color: 'var(--text-dull)',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                }}
+                className="text-xs"
+              >
+                © 2025 ZESHO. All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

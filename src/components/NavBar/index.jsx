@@ -1,0 +1,179 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import DarkMode from '../DarkMode';
+
+const NavBar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState(null); // Mock user state
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-slate-900/80 backdrop-blur-2xl border-b border-gray-200/20 dark:border-slate-700/30 shadow-xl">
+      <div className="container mx-auto px-8 py-6">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-4 group">
+            <div className="relative">
+              <div className="w-12 h-12 bg-gradient-to-br from-violet-600 via-purple-600 to-blue-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl">
+                <span className="text-white font-bold text-xl">Z</span>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-600 via-purple-600 to-blue-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-300"></div>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">ZESHO</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 -mt-1">Learn • Share • Grow</span>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-6">
+            <Link 
+              to="/" 
+              className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-white/80 dark:hover:bg-slate-700/80 transition-all duration-300 relative group"
+            >
+              Home
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-violet-600 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-full"></div>
+            </Link>
+            <Link 
+              to="/materials/all" 
+              className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-white/80 dark:hover:bg-slate-700/80 transition-all duration-300 relative group"
+            >
+              Browse
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-violet-600 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-full"></div>
+            </Link>
+            <Link 
+              to="/categories" 
+              className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-white/80 dark:hover:bg-slate-700/80 transition-all duration-300 relative group"
+            >
+              Categories
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-violet-600 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-full"></div>
+            </Link>
+            <Link 
+              to="/about" 
+              className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-white/80 dark:hover:bg-slate-700/80 transition-all duration-300 relative group"
+            >
+              About
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-violet-600 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-full"></div>
+            </Link>
+          </div>
+
+          {/* Right Side Actions */}
+          <div className="flex items-center space-x-4">
+            <DarkMode />
+            
+            {!user ? (
+              <div className="hidden md:flex items-center space-x-3">
+                <Link to="/login">
+                  <button className="px-6 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-gray-100/80 dark:hover:bg-slate-800/80 backdrop-blur-xl transition-all duration-300 border border-gray-200/50 dark:border-slate-700/50">
+                    Login
+                  </button>
+                </Link>
+                <Link to="/signup">
+                  <button className="px-6 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden">
+                    <span className="relative z-10">Get Started</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-violet-700 to-purple-700 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center space-x-3">
+                <Link to="/dashboard">
+                  <button className="px-6 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-gray-100/80 dark:hover:bg-slate-800/80 backdrop-blur-xl transition-all duration-300 border border-gray-200/50 dark:border-slate-700/50">
+                    Dashboard
+                  </button>
+                </Link>
+                <button className="px-6 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                  Upload
+                </button>
+                <div className="relative group">
+                  <div className="w-10 h-10 bg-gradient-to-br from-violet-600 to-purple-600 rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300">
+                    <span className="text-white font-medium text-sm">U</span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-violet-600 to-purple-600 rounded-full opacity-0 group-hover:opacity-20 blur-xl transition-all duration-300"></div>
+                </div>
+              </div>
+            )}
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2.5 text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-xl border border-gray-200/50 dark:border-slate-700/50 hover:bg-gray-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 focus:outline-none"
+              aria-label="Toggle menu"
+            >
+              <div className="w-6 h-6 flex flex-col justify-center items-center space-y-1">
+                <span className={`block w-5 h-0.5 bg-current transform transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+                <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+                <span className={`block w-5 h-0.5 bg-current transform transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="lg:hidden mt-6 py-6 border-t border-gray-200/20 dark:border-slate-700/50 backdrop-blur-xl bg-white/90 dark:bg-slate-900/95 rounded-b-2xl">
+            <div className="flex flex-col space-y-2">
+              <Link 
+                to="/" 
+                className="text-gray-600 hover:text-violet-600 dark:text-gray-300 dark:hover:text-violet-400 font-medium transition-all duration-300 px-4 py-3 rounded-xl hover:bg-violet-50/50 dark:hover:bg-violet-900/20 backdrop-blur-sm"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/materials/all" 
+                className="text-gray-600 hover:text-violet-600 dark:text-gray-300 dark:hover:text-violet-400 font-medium transition-all duration-300 px-4 py-3 rounded-xl hover:bg-violet-50/50 dark:hover:bg-violet-900/20 backdrop-blur-sm"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Browse
+              </Link>
+              <Link 
+                to="/categories" 
+                className="text-gray-600 hover:text-violet-600 dark:text-gray-300 dark:hover:text-violet-400 font-medium transition-all duration-300 px-4 py-3 rounded-xl hover:bg-violet-50/50 dark:hover:bg-violet-900/20 backdrop-blur-sm"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Categories
+              </Link>
+              <Link 
+                to="/about" 
+                className="text-gray-600 hover:text-violet-600 dark:text-gray-300 dark:hover:text-violet-400 font-medium transition-all duration-300 px-4 py-3 rounded-xl hover:bg-violet-50/50 dark:hover:bg-violet-900/20 backdrop-blur-sm"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About
+              </Link>
+              
+              <div className="pt-4 border-t border-gray-200/20 dark:border-slate-700/50">
+                {!user ? (
+                  <div className="flex flex-col space-y-3">
+                    <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                      <button className="w-full px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-gray-100/80 dark:hover:bg-slate-800/80 backdrop-blur-xl transition-all duration-300 border border-gray-200/50 dark:border-slate-700/50">
+                        Login
+                      </button>
+                    </Link>
+                    <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                      <button className="w-full px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                        Get Started
+                      </button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex flex-col space-y-3">
+                    <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                      <button className="w-full px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 rounded-xl hover:bg-gray-100/80 dark:hover:bg-slate-800/80 backdrop-blur-xl transition-all duration-300 border border-gray-200/50 dark:border-slate-700/50">
+                        Dashboard
+                      </button>
+                    </Link>
+                    <button className="w-full px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                      Upload
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default NavBar;

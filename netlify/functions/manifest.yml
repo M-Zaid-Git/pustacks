@@ -1,0 +1,16 @@
+# Netlify Functions configuration
+# https://docs.netlify.com/functions/configure-and-deploy/#configure-the-functions-folder
+
+# Configure all functions with increased memory and timeout for handling 100+ students
+functions:
+  '*':
+    # Increase memory to 1GB (default is 128MB)
+    memory: 1024
+    # Increase timeout to 30 seconds (default is 10 seconds)
+    timeout: 30
+
+  # Specific function configurations
+  signup:
+    # Registration can take a bit longer due to password hashing
+    memory: 1024
+    timeout: 30
