@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { searchBooks, searchSpecificBooks, formatBookData, FAST_NUCES_BOOKS } from '../../services/googleBooksService';
+import { searchBooks, searchBookCollection, formatBookData, BOOK_COLLECTIONS } from '../../services/googleBooksService';
 import BookCard from './BookCard';
 import LoadingSpinner from '../common/LoadingSpinner';
 
@@ -10,31 +10,31 @@ const BookSearch = () => {
   const [error, setError] = useState('');
   const [totalResults, setTotalResults] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchType, setSearchType] = useState('preset'); // Start with preset to show FAST-NUCES books
-  const [presetBooks, setPresetBooks] = useState([]);
-  const [loadingPreset, setLoadingPreset] = useState(true);
+  const [searchType, setSearchType] = useState('collection'); // Start with collections
+  const [selectedCollection, setSelectedCollection] = useState('pucit-fcit');
+  const [collectionBooks, setCollectionBooks] = useState({});
+  const [loadingCollection, setLoadingCollection] = useState(true);
 
   const BOOKS_PER_PAGE = 12;
 
-  // Load FAST-NUCES books on component mount
+  // Load all collections on component mount
   useEffect(() => {
-    loadPresetBooks();
+    loadAllCollections();
   }, []);
 
-  const loadPresetBooks = async () => {
-    setLoadingPreset(true);
+  const loadAllCollections = async () => {
+    setLoadingCollection(true);
     try {
-      const results = await searchSpecificBooks(FAST_NUCES_BOOKS);
-      const foundBooks = results
-        .filter(result => result.success && result.result)
-        .map(result => formatBookData(result.result))
-        .filter(book => book !== null);
-      
-      setPresetBooks(foundBooks);
+      const collections = {};
+      for (const [key, collection] of Object.entries(BOOK_COLLECTIONS)) {
+        const books = await searchBookCollection(key);
+        collections[key] = books;
+      }
+      setCollectionBooks(collections);
     } catch (error) {
-      console.error('Error loading preset books:', error);
+      console.error('Error loading collections:', error);
     } finally {
-      setLoadingPreset(false);
+      setLoadingCollection(false);
     }
   };
 
@@ -85,9 +85,16 @@ const BookSearch = () => {
     }
   };
 
+  const handleCollectionChange = (collectionKey) => {
+    setSelectedCollection(collectionKey);
+    setSearchType('collection');
+  };
+
   const totalPages = Math.ceil(totalResults / BOOKS_PER_PAGE);
-  const displayBooks = searchType === 'preset' ? presetBooks : books;
-  const isLoading = searchType === 'preset' ? loadingPreset : loading;
+  const displayBooks = searchType === 'collection' 
+    ? (collectionBooks[selectedCollection] || [])
+    : books;
+  const isLoading = searchType === 'collection' ? loadingCollection : loading;
 
   return (
     <section className="relative min-h-screen overflow-hidden">
@@ -113,9 +120,44 @@ const BookSearch = () => {
             <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Library</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
-            Explore millions of books from Google Books API, or browse our curated collection of 
-            FAST-NUCES academic resources. Find your next great read or study material.
+            Explore curated collections of programming books, academic textbooks, and tech novels.
+            Each book includes direct download links for easy access.
           </p>
+        </div>
+
+        {/* Collections Navigation */}
+        <div className="max-w-6xl mx-auto mb-12">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              📖 Book Collections
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              Browse our curated collections or search the entire Google Books database
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {Object.entries(BOOK_COLLECTIONS).map(([key, collection]) => (
+              <button
+                key={key}
+                onClick={() => handleCollectionChange(key)}
+                className={`group relative p-6 rounded-2xl transition-all duration-300 text-left ${
+                  selectedCollection === key && searchType === 'collection'
+                    ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg transform scale-105'
+                    : 'text-gray-700 dark:text-gray-300 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 hover:bg-gray-100/80 dark:hover:bg-slate-700/80 hover:scale-102'
+                }`}
+              >
+                <div className="text-3xl mb-3">{collection.emoji}</div>
+                <h3 className="font-bold text-lg mb-2">{collection.name}</h3>
+                <p className="text-sm opacity-90">
+                  {collection.description}
+                </p>
+                <div className="mt-3 text-xs font-semibold">
+                  {collectionBooks[key]?.length || 0} books
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Modern Search Section */}
@@ -136,7 +178,7 @@ const BookSearch = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Search for books by title, author, or ISBN..."
+                    placeholder="Search millions of books from Google Books..."
                     className="w-full pl-14 pr-6 py-4 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 border-0 focus:ring-0 focus:outline-none text-lg"
                   />
                 </div>
@@ -166,14 +208,14 @@ const BookSearch = () => {
           {/* ZESHO-style Toggle Buttons */}
           <div className="flex justify-center gap-4">
             <button
-              onClick={() => setSearchType('preset')}
+              onClick={() => setSearchType('collection')}
               className={`group relative px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                searchType === 'preset'
+                searchType === 'collection'
                   ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
                   : 'text-gray-700 dark:text-gray-300 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 hover:bg-gray-100/80 dark:hover:bg-slate-700/80'
               }`}
             >
-              📖 FAST-NUCES Collection ({presetBooks.length})
+              📖 Collections ({Object.values(collectionBooks).reduce((total, books) => total + books.length, 0)})
             </button>
             <button
               onClick={() => setSearchType('general')}
@@ -216,11 +258,11 @@ const BookSearch = () => {
           </div>
         )}
 
-        {/* Collection Header for FAST-NUCES */}
-        {searchType === 'preset' && !loadingPreset && (
+        {/* Collection Header */}
+        {searchType === 'collection' && !loadingCollection && (
           <div className="text-center mb-12">
             <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/50 dark:to-indigo-900/50 text-blue-700 dark:text-blue-300 px-6 py-3 rounded-full text-sm font-semibold border border-blue-200 dark:border-blue-800">
-              🎓 FAST-NUCES Academic Collection ({presetBooks.length} books)
+              {BOOK_COLLECTIONS[selectedCollection]?.emoji} {BOOK_COLLECTIONS[selectedCollection]?.name} ({displayBooks.length} books)
             </div>
           </div>
         )}
@@ -233,11 +275,11 @@ const BookSearch = () => {
             </div>
             <div className="mt-6 text-center">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {searchType === 'preset' ? 'Loading FAST-NUCES Collection...' : 'Searching Books...'}
+                {searchType === 'collection' ? 'Loading Collections...' : 'Searching Books...'}
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                {searchType === 'preset' 
-                  ? 'Fetching curated academic resources from Google Books'
+                {searchType === 'collection' 
+                  ? 'Fetching curated book collections with download links'
                   : 'Exploring millions of books for you'
                 }
               </p>
@@ -245,9 +287,9 @@ const BookSearch = () => {
           </div>
         )}
 
-        {/* Books Grid with ZESHO styling */}
+        {/* Books Grid with Equal Height Cards */}
         {!isLoading && displayBooks.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mb-16">
             {displayBooks.map((book) => (
               <BookCard key={book.id} book={book} />
             ))}
@@ -266,14 +308,14 @@ const BookSearch = () => {
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
                   We couldn't find any books matching "{searchQuery}". 
-                  Try adjusting your search terms or browse our FAST-NUCES collection.
+                  Try adjusting your search terms or browse our collections.
                 </p>
                 <button
-                  onClick={() => setSearchType('preset')}
+                  onClick={() => setSearchType('collection')}
                   className="inline-flex items-center px-6 py-3 text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
                 >
-                  <span className="mr-2">🎓</span>
-                  Browse FAST-NUCES Collection
+                  <span className="mr-2">📖</span>
+                  Browse Collections
                 </button>
               </div>
             </div>

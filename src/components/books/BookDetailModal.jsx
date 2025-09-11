@@ -97,6 +97,32 @@ const BookDetailModal = ({ book, isOpen, onClose }) => {
                   
                   {/* Action Buttons with ZESHO styling */}
                   <div className="space-y-4">
+                    {book.downloadUrl && (
+                      <a
+                        href={book.downloadUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative w-full inline-flex items-center justify-center px-6 py-4 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                      >
+                        <svg className="w-5 h-5 mr-3 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Download Book
+                      </a>
+                    )}
+                    {book.solutionUrl && (
+                      <a
+                        href={book.solutionUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative w-full inline-flex items-center justify-center px-6 py-4 text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                      >
+                        <svg className="w-5 h-5 mr-3 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Download Solutions
+                      </a>
+                    )}
                     {book.previewLink && (
                       <a
                         href={book.previewLink}
@@ -128,7 +154,7 @@ const BookDetailModal = ({ book, isOpen, onClose }) => {
                         href={book.canonicalVolumeLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative w-full inline-flex items-center justify-center px-6 py-4 text-white bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                        className="group relative w-full inline-flex items-center justify-center px-6 py-4 text-white bg-gradient-to-r from-orange-600 to-red-600 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
                       >
                         <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
