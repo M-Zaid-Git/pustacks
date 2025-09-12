@@ -1,16 +1,19 @@
-// This file is used to set up the FaunaDB schema for the application
+// Optional: FaunaDB setup script (not used in current no-DB deployment)
 // It creates the necessary collections, indexes, and roles
-// Run with: node setup-database.js
+// Run manually only if you intend to enable Fauna: node setup-database.js
 
 require('dotenv').config();
+
+// Note: This script is NOT executed by Netlify or during the build.
+// If FAUNA_SECRET_KEY is not present, exit gracefully.
+if (!process.env.FAUNA_SECRET_KEY) {
+  console.warn('FAUNA_SECRET_KEY not set. Skipping Fauna setup.');
+  process.exit(0);
+}
+
+// Require faunadb only when needed
 const faunadb = require('faunadb');
 const q = faunadb.query;
-
-// Check for the required environment variable
-if (!process.env.FAUNA_SECRET_KEY) {
-  console.error('Required FAUNA_SECRET_KEY environment variable is missing');
-  process.exit(1);
-}
 
 // Initialize the FaunaDB client
 const client = new faunadb.Client({

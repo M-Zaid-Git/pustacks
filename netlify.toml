@@ -12,8 +12,7 @@
   node_bundler = "esbuild"
   included_files = ["server-utils/**", "data/**"]
   
-[[plugins]]
-  package = "./netlify/plugins/environment-plugin"
+# Environment plugin removed; nothing to load here.
 
 # API redirects
 [[redirects]]
