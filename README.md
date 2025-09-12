@@ -66,4 +66,32 @@ Don't hesistate to ask any doubt 😄
 ### How to Contribute
 
 Try picking up some `good-first-issue` from the issue section and make [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) for them.
+<<<<<<< HEAD
 >>>>>>> 196ddc1 ( Major UI/UX improvements and enhancements)
+=======
+
+## Admin (Decap CMS) on Netlify
+
+This project includes a simple, database-free CMS using Decap CMS (formerly Netlify CMS) to manage book entries.
+
+What you get:
+- A secure admin at /admin (Git-based, no DB)
+- Edit books as JSON files in data/books
+- Automatic builds deploy your changes
+
+Setup steps on Netlify:
+1) Deploy this repo to Netlify (connect GitHub, select the repo)
+2) In Site Settings → Identity → Enable Identity
+3) Identity → Registration → Invite Only, then click “Invite user” and invite your admin email
+4) Identity → Services → Enable Git Gateway
+5) Build & deploy (Netlify will run npm run build and publish dist)
+6) Visit https://<your-site>/admin → “Login with Netlify Identity” → accept the invite → log in
+
+Editing books:
+- Click “Books” collection, add entries with Title, Author, Google Drive Link
+- Save & Publish → Netlify will commit JSON under data/books and trigger a deploy
+- Frontend fetches /api/books or /.netlify/functions/books and merges CMS entries with external sources
+
+Local dev for CMS:
+- Decap’s local_backend is enabled; you can open http://localhost:5173/admin but authoring requires Git/backend. For UI-only checks it’s fine.
+>>>>>>> 7cf1f70 (feat: Decap CMS admin, Netlify function, no-DB books)

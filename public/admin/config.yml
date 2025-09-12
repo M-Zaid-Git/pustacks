@@ -1,0 +1,27 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "books"
+    label: "Books"
+    label_singular: "Book"
+    folder: "data/books"
+    create: true
+    format: "json"
+    extension: "json"
+    slug: "{{slug}}"
+    identifier_field: title
+    sortable_fields: ["title", "author", "category"]
+    summary: "{{title}} — {{author}} ({{category}})"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Author", name: "author", widget: "string", required: false }
+      - { label: "Google Drive Link", name: "driveUrl", widget: "string" }
+      - { label: "Category", name: "category", widget: "string", required: false, hint: "Leave blank for auto-detect" }
+      - { label: "Description", name: "description", widget: "text", required: false }

@@ -11,7 +11,7 @@ const categories = [
     resourceCount: 1247,
     color: 'from-blue-500 to-cyan-500',
     bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-    subjects: ['Programming', 'Data Structures', 'Algorithms', 'Software Engineering', 'Web Development']
+    subjects: ['Programming', 'Data Structures', 'Algorithms', 'Software Engineering', 'Web Development'],
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const categories = [
     resourceCount: 892,
     color: 'from-green-500 to-emerald-500',
     bgColor: 'bg-green-50 dark:bg-green-900/20',
-    subjects: ['Calculus', 'Linear Algebra', 'Statistics', 'Discrete Math', 'Probability']
+    subjects: ['Calculus', 'Linear Algebra', 'Statistics', 'Discrete Math', 'Probability'],
   },
   {
     id: 3,
@@ -31,7 +31,7 @@ const categories = [
     resourceCount: 634,
     color: 'from-purple-500 to-pink-500',
     bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-    subjects: ['Mechanics', 'Quantum Physics', 'Thermodynamics', 'Optics', 'Electromagnetism']
+    subjects: ['Mechanics', 'Quantum Physics', 'Thermodynamics', 'Optics', 'Electromagnetism'],
   },
   {
     id: 4,
@@ -41,7 +41,13 @@ const categories = [
     resourceCount: 567,
     color: 'from-orange-500 to-red-500',
     bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-    subjects: ['Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry', 'Biochemistry', 'Analytical Chemistry']
+    subjects: [
+      'Organic Chemistry',
+      'Inorganic Chemistry',
+      'Physical Chemistry',
+      'Biochemistry',
+      'Analytical Chemistry',
+    ],
   },
   {
     id: 5,
@@ -51,7 +57,13 @@ const categories = [
     resourceCount: 723,
     color: 'from-indigo-500 to-blue-500',
     bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
-    subjects: ['Mechanical Engineering', 'Electrical Engineering', 'Civil Engineering', 'Chemical Engineering', 'Computer Engineering']
+    subjects: [
+      'Mechanical Engineering',
+      'Electrical Engineering',
+      'Civil Engineering',
+      'Chemical Engineering',
+      'Computer Engineering',
+    ],
   },
   {
     id: 6,
@@ -61,7 +73,7 @@ const categories = [
     resourceCount: 445,
     color: 'from-yellow-500 to-orange-500',
     bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
-    subjects: ['Management', 'Finance', 'Marketing', 'Entrepreneurship', 'Economics']
+    subjects: ['Management', 'Finance', 'Marketing', 'Entrepreneurship', 'Economics'],
   },
   {
     id: 7,
@@ -71,7 +83,7 @@ const categories = [
     resourceCount: 398,
     color: 'from-teal-500 to-green-500',
     bgColor: 'bg-teal-50 dark:bg-teal-900/20',
-    subjects: ['Molecular Biology', 'Genetics', 'Ecology', 'Biotechnology', 'Cell Biology']
+    subjects: ['Molecular Biology', 'Genetics', 'Ecology', 'Biotechnology', 'Cell Biology'],
   },
   {
     id: 8,
@@ -81,41 +93,46 @@ const categories = [
     resourceCount: 267,
     color: 'from-pink-500 to-rose-500',
     bgColor: 'bg-pink-50 dark:bg-pink-900/20',
-    subjects: ['English Literature', 'Creative Writing', 'Literary Analysis', 'Poetry', 'Drama']
-  }
+    subjects: ['English Literature', 'Creative Writing', 'Literary Analysis', 'Poetry', 'Drama'],
+  },
 ];
 
 const Categories = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    category.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCategories = categories.filter(
+    (category) =>
+      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-blue-50 dark:from-slate-900 dark:via-purple-900 dark:to-slate-900">
       <NavBar />
-      
+
       {/* Hero Section */}
       <div className="relative overflow-hidden pt-20 md:pt-24 pb-16">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-purple-600/10 dark:from-violet-600/20 dark:to-purple-600/20"></div>
         <div className="relative container mx-auto px-6">
           <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
-              Explore Categories
-            </h1>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">Explore Categories</h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-              Discover educational resources organized by subject areas. Find exactly what you need to excel in your studies.
+              Discover educational resources organized by subject areas. Find exactly what you need to excel in your
+              studies.
             </p>
-            
+
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
                   </svg>
                 </div>
                 <input
@@ -143,26 +160,31 @@ const Categories = () => {
               >
                 <div className="p-8">
                   {/* Icon */}
-                  <div className={`w-16 h-16 bg-gradient-to-br ${category.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                  <div
+                    className={`w-16 h-16 bg-gradient-to-br ${category.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                  >
                     <span className="text-2xl">{category.icon}</span>
                   </div>
-                  
+
                   {/* Content */}
                   <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors duration-300">
                     {category.name}
                   </h3>
-                  
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
-                    {category.description}
-                  </p>
-                  
+
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">{category.description}</p>
+
                   {/* Stats */}
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                       {category.resourceCount} resources
                     </span>
                     <div className="w-8 h-8 bg-gray-200 dark:bg-slate-700 rounded-full flex items-center justify-center group-hover:bg-violet-100 dark:group-hover:bg-violet-900/50 transition-colors duration-300">
-                      <svg className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-violet-600 dark:group-hover:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg
+                        className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-violet-600 dark:group-hover:text-violet-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
@@ -176,7 +198,9 @@ const Categories = () => {
             <div className="text-center py-16">
               <div className="text-6xl mb-4">🔍</div>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">No categories found</h3>
-              <p className="text-gray-600 dark:text-gray-300">Try adjusting your search terms or browse all categories.</p>
+              <p className="text-gray-600 dark:text-gray-300">
+                Try adjusting your search terms or browse all categories.
+              </p>
             </div>
           )}
         </div>
@@ -186,16 +210,25 @@ const Categories = () => {
       <div className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-6 text-gray-900 dark:text-white">
-              Popular Subjects
-            </h2>
+            <h2 className="text-4xl font-bold mb-6 text-gray-900 dark:text-white">Popular Subjects</h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Most searched and studied subjects on our platform.
             </p>
           </div>
 
           <div className="flex flex-wrap justify-center gap-4">
-            {['Programming', 'Calculus', 'Physics', 'Organic Chemistry', 'Data Structures', 'Linear Algebra', 'Machine Learning', 'Statistics', 'Web Development', 'Algorithms'].map((subject, index) => (
+            {[
+              'Programming',
+              'Calculus',
+              'Physics',
+              'Organic Chemistry',
+              'Data Structures',
+              'Linear Algebra',
+              'Machine Learning',
+              'Statistics',
+              'Web Development',
+              'Algorithms',
+            ].map((subject, index) => (
               <span
                 key={index}
                 className="px-6 py-3 bg-gradient-to-r from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 text-violet-700 dark:text-violet-300 rounded-full font-medium hover:from-violet-200 hover:to-purple-200 dark:hover:from-violet-800/50 dark:hover:to-purple-800/50 transition-all duration-300 cursor-pointer transform hover:scale-105"
@@ -214,9 +247,7 @@ const Categories = () => {
             {/* Gradient Overlay for better contrast */}
             <div className="absolute inset-0 bg-gradient-to-br from-violet-600/90 to-purple-600/90 rounded-3xl"></div>
             <div className="relative z-10">
-              <h2 className="text-4xl font-bold mb-6 text-white">
-                Can't Find Your Subject?
-              </h2>
+              <h2 className="text-4xl font-bold mb-6 text-white">Can't Find Your Subject?</h2>
               <p className="text-xl text-violet-100 mb-8 max-w-2xl mx-auto">
                 We're constantly adding new categories and subjects. Request your topic and help us expand our library.
               </p>
@@ -241,12 +272,16 @@ const Categories = () => {
           <div className="floating-card max-w-2xl w-full p-8 bg-white dark:bg-slate-800 rounded-3xl">
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center space-x-4">
-                <div className={`w-16 h-16 bg-gradient-to-br ${selectedCategory.color} rounded-2xl flex items-center justify-center shadow-lg`}>
+                <div
+                  className={`w-16 h-16 bg-gradient-to-br ${selectedCategory.color} rounded-2xl flex items-center justify-center shadow-lg`}
+                >
                   <span className="text-2xl">{selectedCategory.icon}</span>
                 </div>
                 <div>
                   <h3 className="text-3xl font-bold text-gray-900 dark:text-white">{selectedCategory.name}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">{selectedCategory.resourceCount} resources available</p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {selectedCategory.resourceCount} resources available
+                  </p>
                 </div>
               </div>
               <button
@@ -258,9 +293,9 @@ const Categories = () => {
                 </svg>
               </button>
             </div>
-            
+
             <p className="text-gray-600 dark:text-gray-300 mb-6">{selectedCategory.description}</p>
-            
+
             <div className="mb-6">
               <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Popular Subjects:</h4>
               <div className="flex flex-wrap gap-2">
@@ -274,11 +309,9 @@ const Categories = () => {
                 ))}
               </div>
             </div>
-            
+
             <div className="flex gap-4">
-              <button className="btn-primary flex-1 py-3 !text-white">
-                Browse Resources
-              </button>
+              <button className="btn-primary flex-1 py-3 !text-white">Browse Resources</button>
               <button className="btn-secondary flex-1 py-3 !text-violet-600 hover:!text-violet-700">
                 Subscribe to Updates
               </button>

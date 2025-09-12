@@ -11,12 +11,18 @@ import connectDB from './config/db.js';
 // Route imports
 import userRoutes from './routes/userRoutes.js';
 import materialRoutes from './routes/materialRoutes.js';
+import bookRoutes from './routes/bookRoutes.js';
 
 // Load environment variables
 dotenv.config();
 
-// Connect to database
-connectDB();
+// Optional DB connection (disabled by default for no-DB mode)
+const USE_DB = process.env.USE_DB === 'true';
+if (USE_DB) {
+  connectDB();
+} else {
+  console.log('🗃️  No-DB mode: Skipping MongoDB connection');
+}
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -34,13 +40,14 @@ app.use(
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-key'],
   })
 );
 
 // API Routes
 app.use('/api', userRoutes);
 app.use('/api', materialRoutes);
+app.use('/api/books', bookRoutes);
 
 // Serve static files from the React app in production
 if (process.env.NODE_ENV === 'production') {

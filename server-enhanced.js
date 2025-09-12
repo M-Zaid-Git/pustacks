@@ -24,29 +24,27 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Security middleware
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000, // 15 minutes
   max: process.env.RATE_LIMIT_MAX_REQUESTS || 100, // limit each IP to 100 requests per windowMs
   message: {
-    error: 'Too many requests from this IP, please try again later.'
-  }
+    error: 'Too many requests from this IP, please try again later.',
+  },
 });
 app.use('/api/', limiter);
 
 // CORS configuration
 const corsOptions = {
-  origin: [
-    process.env.CLIENT_URL || 'http://localhost:5173',
-    'http://localhost:3000',
-    'http://localhost:5174'
-  ],
+  origin: [process.env.CLIENT_URL || 'http://localhost:5173', 'http://localhost:3000', 'http://localhost:5174'],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
@@ -70,7 +68,7 @@ app.get('/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 
@@ -91,53 +89,53 @@ if (process.env.NODE_ENV === 'development') {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  
+
   // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const errors = Object.values(err.errors).map(e => e.message);
+    const errors = Object.values(err.errors).map((e) => e.message);
     return res.status(400).json({
       success: false,
       error: 'Validation Error',
-      details: errors
+      details: errors,
     });
   }
-  
+
   // Mongoose duplicate key error
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
     return res.status(400).json({
       success: false,
-      error: `${field} already exists`
+      error: `${field} already exists`,
     });
   }
-  
+
   // JWT errors
   if (err.name === 'JsonWebTokenError') {
     return res.status(401).json({
       success: false,
-      error: 'Invalid token'
+      error: 'Invalid token',
     });
   }
-  
+
   if (err.name === 'TokenExpiredError') {
     return res.status(401).json({
       success: false,
-      error: 'Token expired'
+      error: 'Token expired',
     });
   }
-  
+
   // File upload errors
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({
       success: false,
-      error: 'File size too large'
+      error: 'File size too large',
     });
   }
-  
+
   // Default error
   res.status(err.statusCode || 500).json({
     success: false,
-    error: err.message || 'Server Error'
+    error: err.message || 'Server Error',
   });
 });
 
@@ -145,7 +143,7 @@ app.use((err, req, res, next) => {
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
-    error: 'Route not found'
+    error: 'Route not found',
   });
 });
 
@@ -156,12 +154,11 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    
+
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-    
+
     // Create indexes for better performance
     await createIndexes();
-    
   } catch (error) {
     console.error('❌ Database connection failed:', error);
     process.exit(1);
@@ -172,30 +169,30 @@ const connectDB = async () => {
 const createIndexes = async () => {
   try {
     const db = mongoose.connection.db;
-    
+
     // User indexes
     await db.collection('users').createIndex({ email: 1 }, { unique: true });
     await db.collection('users').createIndex({ studentId: 1 }, { unique: true, sparse: true });
     await db.collection('users').createIndex({ createdAt: -1 });
-    
+
     // Material indexes
     await db.collection('materials').createIndex({ title: 'text', description: 'text', tags: 'text' });
     await db.collection('materials').createIndex({ category: 1, subject: 1 });
     await db.collection('materials').createIndex({ owner: 1, createdAt: -1 });
     await db.collection('materials').createIndex({ views: -1, downloads: -1 });
     await db.collection('materials').createIndex({ averageRating: -1 });
-    
+
     // Activity indexes
     await db.collection('activities').createIndex({ userId: 1, createdAt: -1 });
     await db.collection('activities').createIndex({ action: 1, createdAt: -1 });
-    
+
     // Notification indexes
     await db.collection('notifications').createIndex({ recipient: 1, createdAt: -1 });
     await db.collection('notifications').createIndex({ isRead: 1 });
-    
+
     // Analytics indexes
     await db.collection('analytics').createIndex({ date: 1 }, { unique: true });
-    
+
     console.log('✅ Database indexes created');
   } catch (error) {
     console.error('❌ Index creation failed:', error);
@@ -223,7 +220,7 @@ process.on('SIGINT', () => {
 const startServer = async () => {
   try {
     await connectDB();
-    
+
     app.listen(PORT, () => {
       console.log(`🚀 ZESHO Server running on port ${PORT}`);
       console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);

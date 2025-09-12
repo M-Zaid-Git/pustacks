@@ -11,7 +11,7 @@ const UploadModal = ({ isOpen, onClose }) => {
     title: '',
     description: '',
     category: '',
-    tags: ''
+    tags: '',
   });
 
   const handleFileChange = (event) => {
@@ -22,14 +22,14 @@ const UploadModal = ({ isOpen, onClose }) => {
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const testCloudinaryConnection = async () => {
     try {
       console.log('🧪 Testing Cloudinary connection...');
-      
+
       // Create a small test file
       const canvas = document.createElement('canvas');
       canvas.width = 100;
@@ -40,25 +40,32 @@ const UploadModal = ({ isOpen, onClose }) => {
       ctx.fillStyle = '#ffffff';
       ctx.font = '20px Arial';
       ctx.fillText('TEST', 25, 55);
-      
+
       canvas.toBlob(async (blob) => {
         const testFile = new File([blob], 'test-connection.png', { type: 'image/png' });
         console.log('📁 Created test file:', testFile.name, testFile.size + ' bytes');
-        
+
         const result = await CloudImageUpload(testFile);
         console.log('🔍 Test result:', result);
-        
+
         if (result.success) {
-          alert(`✅ Cloudinary test successful!\n\nFile uploaded: ${testFile.name}\nURL: ${result.url}\n\n${result.demo ? 'Note: This was a demo upload for testing.' : 'Real Cloudinary upload working!'}`);
+          alert(
+            `✅ Cloudinary test successful!\n\nFile uploaded: ${testFile.name}\nURL: ${result.url}\n\n${
+              result.demo ? 'Note: This was a demo upload for testing.' : 'Real Cloudinary upload working!'
+            }`
+          );
           if (!result.demo) {
             setUseDemoMode(false);
           }
         } else {
-          alert(`❌ Cloudinary test failed!\n\nError: ${result.error}\n\nSuggestion: ${result.suggestion || 'Check your Cloudinary configuration'}\n\nWould you like to enable demo mode instead?`);
+          alert(
+            `❌ Cloudinary test failed!\n\nError: ${result.error}\n\nSuggestion: ${
+              result.suggestion || 'Check your Cloudinary configuration'
+            }\n\nWould you like to enable demo mode instead?`
+          );
           setUseDemoMode(true);
         }
       }, 'image/png');
-      
     } catch (error) {
       console.error('💥 Test failed:', error);
       alert(`❌ Connection test failed: ${error.message}\n\nWe'll enable demo mode for testing.`);
@@ -83,24 +90,24 @@ const UploadModal = ({ isOpen, onClose }) => {
       console.log('VITE_CLOUDINARY_CLOUD_NAME:', import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
 
       const uploadResults = [];
-      
+
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         console.log(`📤 Uploading file ${i + 1}/${selectedFiles.length}:`, file.name);
-        
+
         // Update progress for this file
         const fileProgress = (i / selectedFiles.length) * 90; // Leave 10% for completion
         setUploadProgress(fileProgress);
 
         let result;
-        
+
         // Try Cloudinary upload first, fall back to demo if needed
         if (useDemoMode) {
           console.log('🎭 Using demo mode for:', file.name);
           result = createDemoUpload(file);
         } else {
           result = await CloudImageUpload(file);
-          
+
           // If Cloudinary fails, switch to demo mode
           if (!result.success) {
             console.log('⚠️ Cloudinary failed, switching to demo mode');
@@ -108,9 +115,9 @@ const UploadModal = ({ isOpen, onClose }) => {
             result = createDemoUpload(file);
           }
         }
-        
+
         console.log('📋 Upload result:', result);
-        
+
         if (!result.success) {
           throw new Error(`Failed to upload ${file.name}: ${result.error}`);
         }
@@ -126,7 +133,7 @@ const UploadModal = ({ isOpen, onClose }) => {
           format: result.format,
           size: result.bytes || file.size,
           resource_type: result.resource_type,
-          demo: result.demo || false
+          demo: result.demo || false,
         });
       }
 
@@ -140,7 +147,10 @@ const UploadModal = ({ isOpen, onClose }) => {
         title: formData.title,
         description: formData.description,
         category: formData.category || 'General',
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        tags: formData.tags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag),
         files: uploadResults,
         uploadDate: new Date().toISOString().split('T')[0],
         downloads: 0,
@@ -150,7 +160,7 @@ const UploadModal = ({ isOpen, onClose }) => {
         size: `${(uploadResults.reduce((acc, file) => acc + (file.size || 0), 0) / (1024 * 1024)).toFixed(1)} MB`,
         author: 'Current User',
         university: 'Your University',
-        thumbnail: uploadResults[0]?.resource_type === 'image' ? uploadResults[0].url : '📄'
+        thumbnail: uploadResults[0]?.resource_type === 'image' ? uploadResults[0].url : '📄',
       };
 
       // Store in localStorage for demo
@@ -162,13 +172,19 @@ const UploadModal = ({ isOpen, onClose }) => {
       const existingMaterials = JSON.parse(localStorage.getItem('zesho-materials') || '[]');
       const materialEntry = {
         ...newUpload,
-        fileUrl: uploadResults[0]?.url
+        fileUrl: uploadResults[0]?.url,
       };
       existingMaterials.unshift(materialEntry);
       localStorage.setItem('zesho-materials', JSON.stringify(existingMaterials));
 
-      alert(`✅ Successfully uploaded ${uploadResults.length} file(s)!${uploadResults.some(f => f.demo) ? '\n\n📝 Note: Demo mode was used for testing.' : '\n\n🎉 Real Cloudinary uploads!'}`);
-      
+      alert(
+        `✅ Successfully uploaded ${uploadResults.length} file(s)!${
+          uploadResults.some((f) => f.demo)
+            ? '\n\n📝 Note: Demo mode was used for testing.'
+            : '\n\n🎉 Real Cloudinary uploads!'
+        }`
+      );
+
       // Reset form
       setSelectedFiles([]);
       setFormData({ title: '', description: '', category: '', tags: '' });
@@ -176,10 +192,9 @@ const UploadModal = ({ isOpen, onClose }) => {
       setUploadProgress(0);
       setUploadedFiles([]);
       onClose();
-      
+
       // Reload page to show new upload
       window.location.reload();
-
     } catch (error) {
       console.error('Upload error:', error);
       alert(`❌ Upload failed: ${error.message}\n\nCheck console for details.`);
@@ -213,7 +228,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               </span>
             )}
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
           >
@@ -226,21 +241,24 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* File Upload Area */}
-          <div 
+          <div
             className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-xl p-8 text-center hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
             onDrop={handleDrop}
             onDragOver={handleDragOver}
           >
             <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
             </svg>
             <div className="mb-4">
               <p className="text-lg font-medium text-gray-900 dark:text-white mb-1">
                 Drop files here or click to browse
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                PDF, DOC, PPT, or image files up to 50MB
-              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">PDF, DOC, PPT, or image files up to 50MB</p>
             </div>
             <input
               type="file"
@@ -263,7 +281,10 @@ const UploadModal = ({ isOpen, onClose }) => {
             <div className="space-y-2">
               <h3 className="font-medium text-gray-900 dark:text-white">Selected Files:</h3>
               {selectedFiles.map((file, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg"
+                >
                   <span className="text-sm text-gray-700 dark:text-gray-300">{file.name}</span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     {(file.size / (1024 * 1024)).toFixed(1)} MB
@@ -276,9 +297,7 @@ const UploadModal = ({ isOpen, onClose }) => {
           {/* Form Fields */}
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Title *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title *</label>
               <input
                 type="text"
                 name="title"
@@ -290,9 +309,7 @@ const UploadModal = ({ isOpen, onClose }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Description
-              </label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
               <textarea
                 name="description"
                 value={formData.description}
@@ -305,9 +322,7 @@ const UploadModal = ({ isOpen, onClose }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Category
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
                 <select
                   name="category"
                   value={formData.category}
@@ -325,9 +340,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Tags
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
                 <input
                   type="text"
                   name="tags"
@@ -348,7 +361,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                 <span className="text-sm text-gray-500 dark:text-gray-400">{uploadProgress}%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
-                <div 
+                <div
                   className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
                 ></div>
@@ -365,7 +378,7 @@ const UploadModal = ({ isOpen, onClose }) => {
           >
             Test Connection
           </button>
-          
+
           <div className="flex items-center space-x-4">
             <button
               onClick={onClose}

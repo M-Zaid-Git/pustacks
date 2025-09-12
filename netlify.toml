@@ -1,4 +1,4 @@
-# netlify.toml - ZESHO Platform Deployment Configuration
+# netlify.toml - Configuration file for Netlify deployments
 
 [build]
   # Directory to publish (the folder that contains the built site)
@@ -8,26 +8,27 @@
   # Serverless functions directory
   functions = "netlify/functions"
 
-# API redirects for serverless functions
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["server-utils/**", "data/**"]
+  
+[[plugins]]
+  package = "./netlify/plugins/environment-plugin"
+
+# API redirects
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
   force = true
 
-# Admin panel redirects
-[[redirects]]
-  from = "/admin/*"
-  to = "/index.html"
-  status = 200
-
-# SPA (Single Page Application) routing redirects
+# Redirects for SPA (Single Page Application) routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Security and performance headers
+# Headers for security and caching
 [[headers]]
   for = "/*"
   [headers.values]
@@ -35,22 +36,8 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self' *.cloudinary.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: blob: *.cloudinary.com; font-src 'self' data: *.googleapis.com *.gstatic.com; connect-src 'self' *.cloudinary.com *.netlify.app *.netlify.com;"
+    Content-Security-Policy = "default-src 'self' *.cloudinary.com; script-src 'self' 'unsafe-inline' *.googleapis.com identity.netlify.com unpkg.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: blob: *.cloudinary.com; font-src 'self' data: *.googleapis.com *.gstatic.com; connect-src 'self' *.cloudinary.com *.netlify.app *.netlify.com identity.netlify.com api.netlify.com;"
 
-# Cache static assets
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-# Cache images
-[[headers]]
-  for = "/*.{jpg,jpeg,png,gif,webp,svg,ico}"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000"
-
-# Environment variables for build
+# Environment variables - NOTE: Set sensitive values in Netlify UI, not here!
 [build.environment]
   NODE_VERSION = "18"
-  VITE_APP_NAME = "ZESHO"
-  VITE_APP_DESCRIPTION = "Educational Resources Platform"

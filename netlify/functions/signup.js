@@ -29,7 +29,7 @@ exports.handler = async (event, context) => {
           'Browse educational materials',
           'Admin content management',
           'Cloudinary file storage',
-          'Modern responsive design'
+          'Modern responsive design',
         ],
         adminAccess: 'Use secret code "como" to access admin panel',
         timestamp: new Date().toISOString(),

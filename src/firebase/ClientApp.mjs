@@ -4,8 +4,8 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // Check if we have valid Firebase config
-const hasValidConfig = import.meta.env.VITE_FIREBASE_API_KEY && 
-                      import.meta.env.VITE_FIREBASE_API_KEY !== "mock-api-key-for-development";
+const hasValidConfig =
+  import.meta.env.VITE_FIREBASE_API_KEY && import.meta.env.VITE_FIREBASE_API_KEY !== 'mock-api-key-for-development';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

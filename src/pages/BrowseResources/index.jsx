@@ -16,12 +16,11 @@ const BrowseResources = () => {
 
   // Define categories directly since we're not fetching from Firebase anymore
   const categories = [
-    { id: 'books', name: 'Books' },
-    { id: 'notes', name: 'Notes' },
-    { id: 'papers', name: 'Papers' },
-    { id: 'assignments', name: 'Assignments' },
-    { id: 'exams', name: 'Exams' },
-    { id: 'coding', name: 'Coding Resources' },
+    { id: 'programming', name: 'Programming Fundamentals' },
+    { id: 'networks', name: 'Computer Networks' },
+    { id: 'oop', name: 'Object Oriented Programming' },
+    { id: 'ideology', name: 'Ideology' },
+    { id: 'physics', name: 'Applied Physics' },
     { id: 'tutorials', name: 'Tutorials' },
     { id: 'presentations', name: 'Presentations' },
     { id: 'other', name: 'Other' },
@@ -185,12 +184,18 @@ const BrowseResources = () => {
                       <button
                         onClick={() => {
                           // Create demo download
-                          const demoContent = `# ${material.title || 'Academic Resource'}\n\nThis is a demo file from ZESHO Educational Platform.\nIn a real application, this would be the actual academic resource.\n\nCategory: ${material.category || 'General'}\nType: ${material.type || 'PDF'}`;
+                          const demoContent = `# ${
+                            material.title || 'Academic Resource'
+                          }\n\nThis is a demo file from ZESHO Educational Platform.\nIn a real application, this would be the actual academic resource.\n\nCategory: ${
+                            material.category || 'General'
+                          }\nType: ${material.type || 'PDF'}`;
                           const blob = new Blob([demoContent], { type: 'text/plain' });
                           const url = window.URL.createObjectURL(blob);
                           const link = document.createElement('a');
                           link.href = url;
-                          link.download = `${(material.title || 'resource').replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
+                          link.download = `${(material.title || 'resource')
+                            .replace(/[^a-z0-9]/gi, '_')
+                            .toLowerCase()}.txt`;
                           document.body.appendChild(link);
                           link.click();
                           document.body.removeChild(link);
@@ -199,8 +204,18 @@ const BrowseResources = () => {
                         }}
                         className="group inline-flex items-center px-4 py-2 text-sm font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-xl hover:bg-indigo-100 transition-all duration-200 transform hover:-translate-y-0.5"
                       >
-                        <svg className="w-4 h-4 mr-1 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <svg
+                          className="w-4 h-4 mr-1 group-hover:scale-110 transition-transform duration-200"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
                         </svg>
                         Download
                       </button>

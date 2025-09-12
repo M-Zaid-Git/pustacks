@@ -3,6 +3,7 @@
 ## ✅ Pre-Deployment Steps
 
 ### 1. Environment Variables Setup
+
 Set these in Netlify Dashboard → Site Settings → Environment Variables:
 
 ```
@@ -15,6 +16,7 @@ VITE_APP_NAME = ZESHO
 ```
 
 ### 2. Cloudinary Upload Preset
+
 - Go to [Cloudinary Console](https://cloudinary.com/console)
 - Settings → Upload → Upload Presets
 - Create preset: `zesho_uploads`
@@ -22,7 +24,9 @@ VITE_APP_NAME = ZESHO
 - Resource Type: **Auto**
 
 ### 3. Build Configuration
+
 Verify in Netlify:
+
 - **Build command**: `npm run build`
 - **Publish directory**: `dist`
 - **Node version**: 18 (auto-detected)
@@ -30,30 +34,36 @@ Verify in Netlify:
 ## 🔧 Configuration Fixed
 
 ✅ **Removed problematic environment plugin**
+
 - No more `manifest.yml` errors
 - Cleaner netlify.toml configuration
 - Environment variables set directly in Netlify dashboard
 
 ✅ **Updated redirects for SPA routing**
+
 - Admin panel routes work correctly
 - All pages redirect properly for client-side routing
 
 ## 🚀 Deploy Steps
 
 1. **Connect Repository**
+
    - Go to Netlify Dashboard
    - New site from Git → GitHub
    - Select: `M-Zaid-Git/zesho`
 
 2. **Configure Build**
+
    - Build command: `npm run build`
    - Publish directory: `dist`
 
 3. **Add Environment Variables**
+
    - Copy variables from checklist above
    - Paste into Netlify environment variables
 
 4. **Deploy Site**
+
    - Click "Deploy site"
    - Wait for build to complete
 

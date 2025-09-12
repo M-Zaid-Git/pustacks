@@ -1,7 +1,7 @@
 {
-  "name": "zesho-platform",
+  "name": "unishare",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "type": "module",
   "husky": {
     "hooks": {
@@ -14,8 +14,8 @@
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "format": "npx prettier --write .",
     "preview": "vite preview",
-    "deploy": "npm run build && echo 'Build complete! Ready for Netlify deployment.'",
-    "clean": "rm -rf dist node_modules/.vite"
+    "seed:nuces": "node ./scripts/import-nuces-books.mjs",
+    "seed:nuces:api": "node ./scripts/seed-via-api.mjs"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.46.2",
@@ -24,14 +24,8 @@
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
     "@reduxjs/toolkit": "^1.9.5",
-    "@tailwindcss/line-clamp": "^0.4.4",
-    "axios": "^1.11.0",
-    "bcryptjs": "^3.0.2",
     "classnames": "^2.3.2",
-    "cloudinary": "^2.7.0",
-    "firebase": "^9.23.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.19.0",
+    "firebase": "^9.22.0",
     "pdfjs-dist": "^3.8.162",
     "prettier": "^2.8.8",
     "react": "^18.2.0",

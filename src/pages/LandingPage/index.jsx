@@ -1,21 +1,21 @@
-import { NavBar, HeroSection, Footer } from '../../components';
+import { NavBar, HeroSection, Footer } from '../../components/index.mjs';
 import BackToTop from '../../components/backtotop';
-import Content from '../../components/content';
+import BooksSection from '../../components/BooksSection';
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-950 transition-all duration-300">
-      <NavBar />
-      
-      {/* Modern seamless layout without harsh padding */}
-      <main className="pt-16 md:pt-20">
+    <>
+      <div className={'flex flex-col items-start justify-center gap-20 '}>
+        <NavBar />
         <HeroSection />
-        <Content />
-      </main>
-      
-      <Footer />
-      <BackToTop />
-    </div>
+        <BooksSection />
+        <Footer />
+      </div>
+
+      <div>
+        <BackToTop />
+      </div>
+    </>
   );
 };
 

@@ -1,11 +1,13 @@
 # ZESHO Platform - Deployment Guide 🚀
 
 ## Overview
+
 This guide will help you deploy the ZESHO educational resources platform to Netlify with Cloudinary integration.
 
 ## Prerequisites
+
 - ✅ GitHub repository set up
-- ✅ Cloudinary account created  
+- ✅ Cloudinary account created
 - ✅ Cloudinary credentials configured
 - ✅ Code ready for deployment
 
@@ -28,6 +30,7 @@ Before deploying, you MUST create an upload preset in Cloudinary:
 ## Step 2: Deploy to Netlify
 
 ### Option A: Connect GitHub Repository
+
 1. Go to [Netlify Dashboard](https://app.netlify.com/)
 2. Click **New site from Git**
 3. Choose **GitHub** and authorize
@@ -38,6 +41,7 @@ Before deploying, you MUST create an upload preset in Cloudinary:
 6. Click **Deploy site**
 
 ### Option B: Manual Deployment
+
 1. Run `npm run build` locally
 2. Go to [Netlify Dashboard](https://app.netlify.com/)
 3. Drag and drop the `dist` folder
@@ -51,7 +55,7 @@ In your Netlify site dashboard:
 
 ```
 VITE_CLOUDINARY_CLOUD_NAME = ZESHO
-VITE_CLOUDINARY_API_KEY = 569935816798767  
+VITE_CLOUDINARY_API_KEY = 569935816798767
 VITE_CLOUDINARY_API_SECRET = tOffx6CZ9YwvmTQVGY4eA8y0STM
 VITE_CLOUDINARY_UPLOAD_PRESET = zesho_uploads
 ```
@@ -61,6 +65,7 @@ VITE_CLOUDINARY_UPLOAD_PRESET = zesho_uploads
 ## Step 4: Redeploy After Environment Variables
 
 After adding environment variables:
+
 1. Go to **Deploys** tab
 2. Click **Trigger deploy** → **Deploy site**
 
@@ -75,28 +80,33 @@ After adding environment variables:
 ## Troubleshooting
 
 ### Build Fails
+
 - Check if all dependencies are installed: `npm install`
 - Verify environment variables are set in Netlify dashboard
 - Check build logs for specific errors
 - Ensure build command is `npm run build` and publish directory is `dist`
 
 ### Netlify Plugin Errors
+
 - If you see "manifest.yml" errors, the custom environment plugin has been removed
 - Set environment variables directly in Netlify dashboard instead
 - Check that netlify.toml doesn't reference missing plugins
 
 ### Upload Preset Not Found
+
 - Ensure preset name is exactly `zesho_uploads`
 - Verify signing mode is `Unsigned`
 - Check Cloudinary console for preset creation
 
 ### File Uploads Fail
+
 - Verify all environment variables are correct in Netlify dashboard
 - Check browser console for errors
 - Ensure upload preset is created and configured
 - Test locally first with `npm run dev`
 
 ### Admin Panel Access Issues
+
 - URL should be: `your-site.netlify.app/admin/login`
 - Secret code: `como`
 - Clear browser cache if needed
@@ -113,12 +123,14 @@ After adding environment variables:
 ## Site Features
 
 ### For Users:
+
 - Browse educational materials
 - Filter by category and type
 - Search functionality
 - Download resources
 
 ### For Admins:
+
 - Add new materials via admin panel
 - Upload files to Cloudinary
 - Manage resource database
@@ -134,6 +146,7 @@ After adding environment variables:
 ## Support
 
 If you encounter issues:
+
 1. Check browser console for errors
 2. Review Netlify build logs
 3. Verify Cloudinary configuration

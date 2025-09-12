@@ -1,143 +1,257 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
+import useTilt from '../../utils/useTilt';
 
 const HeroSection = () => {
-  const [searchParam, setSearchParam] = React.useState('');
-  const navigate = useNavigate();
+  const [searchParam, setSearchParam] = React.useState(''); // Search Parameter
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchParam.trim()) {
-      // Navigate to materials page with search parameter
-      navigate(`/materials/all?search=${encodeURIComponent(searchParam.trim())}`);
-    } else {
-      // If empty search, just go to materials page
-      navigate('/materials/all');
-    }
-  };
+  React.useEffect(() => {
+    // Add scroll reveal animation to elements
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px',
+    };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch(e);
-    }
-  };
-  
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Tilt for the main illustration card
+  const tiltRef = useTilt({ maxTilt: 10, scale: 1.015, glare: true });
+  const sceneRef = React.useRef(null);
+
+  // Pointer parallax for decorative layers
+  React.useEffect(() => {
+    const el = sceneRef.current;
+    if (!el) return;
+
+    let raf;
+    const layers = Array.from(el.querySelectorAll('.parallax-layer'));
+
+    const onMove = (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      const maxShift = 20; // px
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        layers.forEach((layer) => {
+          const depth = Number(layer.dataset.depth || 30);
+          const dx = -x * ((maxShift * depth) / 60);
+          const dy = -y * ((maxShift * depth) / 60);
+          layer.style.transform = `translateZ(${depth}px) translateX(${dx.toFixed(1)}px) translateY(${dy.toFixed(
+            1
+          )}px)`;
+        });
+      });
+    };
+
+    const onLeave = () => {
+      if (raf) cancelAnimationFrame(raf);
+      layers.forEach((layer) => {
+        const depth = Number(layer.dataset.depth || 30);
+        layer.style.transform = `translateZ(${depth}px) translateX(0px) translateY(0px)`;
+      });
+    };
+
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+
   return (
-    <section className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex items-center justify-center overflow-hidden">
-      {/* Modern geometric background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/5 via-purple-600/5 to-pink-600/5"></div>
-      
-      {/* Floating elements for modern look */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl opacity-20 rotate-12 animate-pulse"></div>
-      <div className="absolute top-40 right-16 w-16 h-16 bg-gradient-to-br from-pink-400 to-red-500 rounded-full opacity-25 animate-bounce"></div>
-      <div className="absolute bottom-32 left-1/4 w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg opacity-30 rotate-45"></div>
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center max-w-5xl mx-auto">
-          {/* Modern Hero Title with better typography */}
-          <div className="mb-8">
-            <div className="inline-flex items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-lg">
-              🚀 Welcome to the future of learning
-            </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
-              Learn.{' '}
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Share.
+    <main className="relative overflow-hidden perspective-1000">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-200 dark:bg-blue-800 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-float" />
+        <div
+          className="absolute top-40 right-20 w-40 h-40 bg-purple-200 dark:bg-purple-800 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-float"
+          style={{ animationDelay: '-1s' }}
+        />
+        <div
+          className="absolute bottom-20 left-1/4 w-36 h-36 bg-indigo-200 dark:bg-indigo-800 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-float"
+          style={{ animationDelay: '-2s' }}
+        />
+      </div>
+
+      <div className="h-[15vh]" />
+  <div className="relative min-h-[85vh] w-full flex items-center justify-between overflow-hidden px-4 lg:px-8">
+        {/* Main Content */}
+        <section className="relative w-full lg:w-1/2 h-full flex flex-col items-start justify-center gap-8 pl-4 lg:pl-10 z-10">
+          {/* Title */}
+          <div className="scroll-reveal">
+            <h1 className="relative">
+              {/* Animated Background Text */}
+              <div className="absolute inset-0 text-6xl lg:text-7xl xl:text-8xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent opacity-10 animate-pulse-slow select-none pointer-events-none">
+                Read. Learn. Share.
+              </div>
+
+              {/* Main Text */}
+              <div className="relative text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-800 dark:text-white leading-tight">
+                <span className="inline-block animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
+                  Read.
+                </span>{' '}
+                <span
+                  className="inline-block animate-fadeInUp bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+                  style={{ animationDelay: '0.3s' }}
+                >
+                  Learn.
+                </span>{' '}
+                <span
+                  className="inline-block animate-fadeInUp bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
+                  style={{ animationDelay: '0.5s' }}
+                >
+                  Share.
+                </span>
+              </div>
+
+              {/* Decorative Elements */}
+              <div className="flex items-center gap-3 mt-4 animate-fadeInLeft" style={{ animationDelay: '0.7s' }}>
+                <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse" />
+                <div
+                  className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse"
+                  style={{ animationDelay: '0.5s' }}
+                />
+                <div
+                  className="w-4 h-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse"
+                  style={{ animationDelay: '1s' }}
+                />
+              </div>
+            </h1>
+          </div>
+
+          {/* Subtitle */}
+          <div className="scroll-reveal animate-fadeInUp" style={{ animationDelay: '0.9s' }}>
+            <p className="text-lg lg:text-xl xl:text-2xl font-semibold text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
+              <span className="bg-gradient-to-r from-slate-800 to-slate-600 dark:from-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
+                Your Open Digital Library
               </span>
               <br />
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Excel.
+              <span className="text-slate-500 dark:text-slate-400 font-normal">
+                All books on one page. No logins. Fast Google Drive downloads.
               </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Join thousands of students and educators collaborating on 
-              <span className="font-semibold text-indigo-600 dark:text-indigo-400"> ZESHO</span> - 
-              the modern platform for academic excellence.
             </p>
           </div>
-          
-                    {/* Modern Search Bar */}
-          <div className="max-w-3xl mx-auto mb-12">
-            <form onSubmit={handleSearch}>
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
-                <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-2 shadow-xl">
-                  <div className="flex items-center space-x-4 px-6 py-5">
-                    <button 
-                      type="submit"
-                      className="text-indigo-500 hover:text-indigo-600 transition-colors"
+
+          {/* Enhanced Search Bar */}
+          <div className="scroll-reveal animate-scaleIn" style={{ animationDelay: '1.1s' }}>
+            <div className="relative group">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
+              <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-1">
+                <div className="flex items-center bg-slate-50 dark:bg-slate-700 rounded-xl px-4 py-3 lg:py-4 gap-3 transition-all duration-300 hover:bg-white dark:hover:bg-slate-600">
+                  <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search for Notes, Books, Research Papers..."
+                    value={searchParam}
+                    onChange={(e) => setSearchParam(e.target.value)}
+                    className="flex-1 bg-transparent outline-none text-slate-700 dark:text-slate-200 font-medium text-lg placeholder-slate-400 dark:placeholder-slate-500"
+                  />
+                  {searchParam && (
+                    <button
+                      onClick={() => setSearchParam('')}
+                      className="p-2 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
                     >
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
-                    <input
-                      type="text"
-                      placeholder="Search notes, books, research papers..."
-                      value={searchParam}
-                      onChange={(e) => setSearchParam(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      className="flex-1 bg-transparent border-none outline-none text-lg font-medium placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-white"
-                    />
-                    {searchParam && (
-                      <button
-                        type="button"
-                        onClick={() => setSearchParam('')}
-                        className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
-            </form>
+            </div>
           </div>
-          
-          {/* Modern CTA Buttons - Remove Upload Resource */}
-          <div className="flex justify-center items-center mb-16">
-            <button 
-              onClick={() => navigate('/materials/all')}
-              className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+
+          {/* CTA Buttons */}
+          <div
+            className="scroll-reveal animate-fadeInUp flex flex-col sm:flex-row gap-4"
+            style={{ animationDelay: '1.3s' }}
+          >
+            <a
+              href="#books"
+              className="theme-btn-shadow px-8 py-4 rounded-xl text-white font-semibold text-lg hover-lift"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
-              <span className="relative">Start Exploring</span>
-              <svg className="w-5 h-5 ml-2 relative" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
+              Browse Books
+            </a>
+            <a
+              href="/admin"
+              className="px-8 py-4 rounded-xl text-slate-700 dark:text-slate-300 font-semibold text-lg border-2 border-slate-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 hover-lift"
+            >
+              Admin Panel
+            </a>
           </div>
-          
-          {/* Modern Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 dark:border-slate-700/50">
-              <div className="text-3xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">10K+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium">Resources Shared</div>
+        </section>
+
+        {/* Illustration Section */}
+        <section className="hidden lg:flex w-1/2 h-full items-center justify-center relative">
+          <div ref={sceneRef} className="relative w-full max-w-xl preserve-3d transform-gpu">
+            {/* Parallax Layers */}
+            <div className="parallax-layer" data-depth="60" style={{ transform: 'translateZ(60px)' }}>
+              <div className="absolute -top-16 -left-14 w-28 h-28 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl rotate-12 animate-float opacity-70" />
             </div>
-            <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 dark:border-slate-700/50">
-              <div className="text-3xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">5K+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium">Active Students</div>
+            <div className="parallax-layer" data-depth="40" style={{ transform: 'translateZ(40px)' }}>
+              <div className="absolute top-1/3 -right-10 w-24 h-24 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full animate-float opacity-70" />
             </div>
-            <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 dark:border-slate-700/50">
-              <div className="text-3xl font-black bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent mb-2">50+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium">Universities</div>
+            <div className="parallax-layer" data-depth="30" style={{ transform: 'translateZ(30px)' }}>
+              <div className="absolute bottom-6 left-8 w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg rotate-45 animate-float opacity-70" />
+            </div>
+
+            {/* Main Illustration Card with Tilt & Shine */}
+            <div ref={tiltRef} className="relative z-10 tilt-base tilt-shadow shine rounded-3xl overflow-hidden">
+              <div data-glare className="absolute inset-0 pointer-events-none" />
+              <img
+                src="/fileSharing3.webp"
+                alt="Educational Excellence Illustration"
+                className="w-full h-auto block select-none"
+              />
             </div>
           </div>
-        </div>
+        </section>
       </div>
-      
-      {/* Modern scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <div className="flex flex-col items-center space-y-2 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
-          <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Scroll to explore</span>
-          <div className="w-6 h-10 border-2 border-gray-300 dark:border-gray-600 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-gray-400 dark:bg-gray-500 rounded-full mt-2 animate-bounce"></div>
-          </div>
-        </div>
+
+      {/* Bottom Decorative Elements */}
+  <div className="w-full flex items-center justify-center gap-3 mt-8 pb-8">
+        <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse" />
+        <div
+          className="w-3 h-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse"
+          style={{ animationDelay: '0.5s' }}
+        />
+        <div
+          className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse"
+          style={{ animationDelay: '1s' }}
+        />
+        <div
+          className="w-3 h-3 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full animate-pulse"
+          style={{ animationDelay: '1.5s' }}
+        />
+        <div
+          className="w-3 h-3 bg-gradient-to-r from-rose-500 to-orange-500 rounded-full animate-pulse"
+          style={{ animationDelay: '2s' }}
+        />
       </div>
-    </section>
+    </main>
   );
 };
 

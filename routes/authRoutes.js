@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        error: 'User already exists with this email'
+        error: 'User already exists with this email',
       });
     }
 
@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        error: 'Password must be at least 6 characters'
+        error: 'Password must be at least 6 characters',
       });
     }
 
@@ -57,11 +57,13 @@ router.post('/register', async (req, res) => {
       year: year || 'Freshman',
       studentId,
       points: 100, // Welcome bonus
-      badges: [{
-        name: 'Welcome to ZESHO',
-        description: 'Joined the ZESHO educational platform',
-        icon: '🎉'
-      }]
+      badges: [
+        {
+          name: 'Welcome to ZESHO',
+          description: 'Joined the ZESHO educational platform',
+          icon: '🎉',
+        },
+      ],
     });
 
     // Log activity
@@ -71,7 +73,7 @@ router.post('/register', async (req, res) => {
       targetType: 'user',
       targetId: user._id,
       points: 100,
-      details: { welcomeBonus: true }
+      details: { welcomeBonus: true },
     });
 
     // Generate token
@@ -85,13 +87,13 @@ router.post('/register', async (req, res) => {
       success: true,
       message: 'Registration successful',
       token,
-      user: userResponse
+      user: userResponse,
     });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({
       success: false,
-      error: 'Server error during registration'
+      error: 'Server error during registration',
     });
   }
 });
@@ -108,7 +110,7 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: 'Invalid credentials'
+        error: 'Invalid credentials',
       });
     }
 
@@ -117,7 +119,7 @@ router.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        error: 'Invalid credentials'
+        error: 'Invalid credentials',
       });
     }
 
@@ -147,13 +149,13 @@ router.post('/login', async (req, res) => {
       success: true,
       message: 'Login successful',
       token,
-      user: userResponse
+      user: userResponse,
     });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({
       success: false,
-      error: 'Server error during login'
+      error: 'Server error during login',
     });
   }
 });
@@ -167,19 +169,19 @@ router.get('/verify', auth, async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: 'User not found'
+        error: 'User not found',
       });
     }
 
     res.json({
       success: true,
-      user
+      user,
     });
   } catch (error) {
     console.error('Token verification error:', error);
     res.status(500).json({
       success: false,
-      error: 'Server error during token verification'
+      error: 'Server error during token verification',
     });
   }
 });
@@ -195,7 +197,7 @@ router.post('/forgot-password', async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        error: 'User not found with this email'
+        error: 'User not found with this email',
       });
     }
 
@@ -244,18 +246,18 @@ router.post('/forgot-password', async (req, res) => {
     await sendEmail({
       to: user.email,
       subject: 'ZESHO Password Reset Request',
-      html: emailContent
+      html: emailContent,
     });
 
     res.json({
       success: true,
-      message: 'Password reset email sent'
+      message: 'Password reset email sent',
     });
   } catch (error) {
     console.error('Forgot password error:', error);
     res.status(500).json({
       success: false,
-      error: 'Server error during password reset request'
+      error: 'Server error during password reset request',
     });
   }
 });
@@ -271,7 +273,7 @@ router.post('/reset-password', async (req, res) => {
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        error: 'Password must be at least 6 characters'
+        error: 'Password must be at least 6 characters',
       });
     }
 
@@ -281,13 +283,13 @@ router.post('/reset-password', async (req, res) => {
     // Find user with valid token
     const user = await User.findOne({
       resetPasswordToken: hashedToken,
-      resetPasswordExpire: { $gt: Date.now() }
+      resetPasswordExpire: { $gt: Date.now() },
     });
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid or expired reset token'
+        error: 'Invalid or expired reset token',
       });
     }
 
@@ -307,13 +309,13 @@ router.post('/reset-password', async (req, res) => {
     res.json({
       success: true,
       message: 'Password reset successful',
-      token: authToken
+      token: authToken,
     });
   } catch (error) {
     console.error('Reset password error:', error);
     res.status(500).json({
       success: false,
-      error: 'Server error during password reset'
+      error: 'Server error during password reset',
     });
   }
 });
@@ -329,18 +331,18 @@ router.post('/logout', auth, async (req, res) => {
       userId: req.user._id,
       action: 'logout',
       targetType: 'user',
-      targetId: req.user._id
+      targetId: req.user._id,
     });
 
     res.json({
       success: true,
-      message: 'Logout successful'
+      message: 'Logout successful',
     });
   } catch (error) {
     console.error('Logout error:', error);
     res.status(500).json({
       success: false,
-      error: 'Server error during logout'
+      error: 'Server error during logout',
     });
   }
 });
@@ -360,7 +362,7 @@ router.post('/change-password', auth, async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({
         success: false,
-        error: 'Current password is incorrect'
+        error: 'Current password is incorrect',
       });
     }
 
@@ -368,7 +370,7 @@ router.post('/change-password', auth, async (req, res) => {
     if (newPassword.length < 6) {
       return res.status(400).json({
         success: false,
-        error: 'New password must be at least 6 characters'
+        error: 'New password must be at least 6 characters',
       });
     }
 
@@ -382,13 +384,13 @@ router.post('/change-password', auth, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Password changed successfully'
+      message: 'Password changed successfully',
     });
   } catch (error) {
     console.error('Change password error:', error);
     res.status(500).json({
       success: false,
-      error: 'Server error during password change'
+      error: 'Server error during password change',
     });
   }
 });

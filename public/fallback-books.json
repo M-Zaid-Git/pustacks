@@ -1,0 +1,34 @@
+[
+  {
+    "_id": "sample-1",
+    "title": "Programming Fundamentals with C++",
+    "author": "D.S. Malik",
+    "description": "Complete guide to programming fundamentals using C++.",
+    "category": "Programming Fundamentals",
+    "driveUrl": "https://drive.google.com/file/d/1ABC123XYZ/view"
+  },
+  {
+    "_id": "sample-2",
+    "title": "Computer Networks – A Top Down Approach",
+    "author": "Kurose & Ross",
+    "description": "Networking concepts and protocols in a top-down manner.",
+    "category": "Computer Networks",
+    "driveUrl": "https://drive.google.com/file/d/2DEF456ABC/view"
+  },
+  {
+    "_id": "sample-3",
+    "title": "Operating System Concepts",
+    "author": "Silberschatz et al.",
+    "description": "Classic text on operating systems.",
+    "category": "Operating Systems",
+    "driveUrl": "https://drive.google.com/file/d/4JKL012GHI/view"
+  },
+  {
+    "_id": "sample-4",
+    "title": "Data Structures and Algorithms",
+    "author": "Cormen et al.",
+    "description": "Introduction to algorithms and data structures.",
+    "category": "Discrete Mathematics",
+    "driveUrl": "https://drive.google.com/file/d/6PQR678MNO/view"
+  }
+]

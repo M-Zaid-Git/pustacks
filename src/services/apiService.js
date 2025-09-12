@@ -77,7 +77,7 @@ export const authAPI = {
   resetPassword: async (token, password) => {
     const response = await api.post('/auth/reset-password', { token, password });
     return response.data;
-  }
+  },
 };
 
 // User API
@@ -132,7 +132,7 @@ export const userAPI = {
       },
     });
     return response.data;
-  }
+  },
 };
 
 // Materials API
@@ -232,7 +232,7 @@ export const materialsAPI = {
   getTrendingMaterials: async (period = '7d', limit = 10) => {
     const response = await api.get(`/materials/trending?period=${period}&limit=${limit}`);
     return response.data;
-  }
+  },
 };
 
 // Categories API
@@ -253,7 +253,7 @@ export const categoriesAPI = {
   getCategoryMaterials: async (slug, page = 1, limit = 10) => {
     const response = await api.get(`/categories/${slug}/materials?page=${page}&limit=${limit}`);
     return response.data;
-  }
+  },
 };
 
 // Study Groups API
@@ -304,7 +304,7 @@ export const studyGroupsAPI = {
   scheduleMeeting: async (id, meetingData) => {
     const response = await api.post(`/study-groups/${id}/meetings`, meetingData);
     return response.data;
-  }
+  },
 };
 
 // Notifications API
@@ -331,7 +331,7 @@ export const notificationsAPI = {
   getUnreadCount: async () => {
     const response = await api.get('/notifications/unread-count');
     return response.data;
-  }
+  },
 };
 
 // Analytics API
@@ -354,10 +354,10 @@ export const analyticsAPI = {
       action,
       targetType,
       targetId,
-      metadata
+      metadata,
     });
     return response.data;
-  }
+  },
 };
 
 // Utility functions
@@ -376,7 +376,7 @@ export const utils = {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   },
 
@@ -384,14 +384,14 @@ export const utils = {
   formatRelativeTime: (date) => {
     const now = new Date();
     const diffInSeconds = Math.floor((now - new Date(date)) / 1000);
-    
+
     const intervals = {
       year: 31536000,
       month: 2592000,
       week: 604800,
       day: 86400,
       hour: 3600,
-      minute: 60
+      minute: 60,
     };
 
     for (const [unit, secondsInUnit] of Object.entries(intervals)) {
@@ -418,10 +418,10 @@ export const utils = {
       video: '🎥',
       audio: '🎵',
       zip: '📦',
-      other: '📁'
+      other: '📁',
     };
     return icons[fileType] || icons.other;
-  }
+  },
 };
 
 export default api;

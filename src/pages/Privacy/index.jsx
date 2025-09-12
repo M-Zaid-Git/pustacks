@@ -6,21 +6,17 @@ const Privacy = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-blue-50 dark:from-slate-900 dark:via-purple-900 dark:to-slate-900">
       <NavBar />
-      
+
       {/* Hero Section */}
       <div className="relative overflow-hidden pt-20 md:pt-24 pb-16">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-purple-600/10 dark:from-violet-600/20 dark:to-purple-600/20"></div>
         <div className="relative container mx-auto px-6">
           <div className="text-center mb-16">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
-              Privacy Policy
-            </h1>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">Privacy Policy</h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Your privacy is important to us. Learn how we collect, use, and protect your information.
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
-              Last updated: September 11, 2025
-            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">Last updated: September 11, 2025</p>
           </div>
         </div>
       </div>
@@ -30,23 +26,23 @@ const Privacy = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="floating-card p-8 md:p-12">
-              
               {/* Introduction */}
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Introduction</h2>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-                  Welcome to ZESHO ("we," "our," or "us"). This Privacy Policy explains how we collect, use, disclose, 
+                  Welcome to ZESHO ("we," "our," or "us"). This Privacy Policy explains how we collect, use, disclose,
                   and safeguard your information when you visit our website and use our educational platform services.
                 </p>
                 <p className="text-lg text-gray-600 dark:text-gray-300">
-                  By using our services, you agree to the collection and use of information in accordance with this policy.
+                  By using our services, you agree to the collection and use of information in accordance with this
+                  policy.
                 </p>
               </section>
 
               {/* Information We Collect */}
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Information We Collect</h2>
-                
+
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Personal Information</h3>
@@ -79,8 +75,8 @@ const Privacy = () => {
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Cookies and Tracking</h3>
                     <p className="text-gray-600 dark:text-gray-300">
-                      We use cookies and similar tracking technologies to enhance your experience, 
-                      analyze usage patterns, and provide personalized content recommendations.
+                      We use cookies and similar tracking technologies to enhance your experience, analyze usage
+                      patterns, and provide personalized content recommendations.
                     </p>
                   </div>
                 </div>
@@ -106,14 +102,18 @@ const Privacy = () => {
 
               {/* Information Sharing */}
               <section className="mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Information Sharing and Disclosure</h2>
-                
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                  Information Sharing and Disclosure
+                </h2>
+
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">We Do Not Sell Your Data</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                      We Do Not Sell Your Data
+                    </h3>
                     <p className="text-gray-600 dark:text-gray-300">
-                      We do not sell, trade, or otherwise transfer your personal information to third parties 
-                      for commercial purposes.
+                      We do not sell, trade, or otherwise transfer your personal information to third parties for
+                      commercial purposes.
                     </p>
                   </div>
 
@@ -137,13 +137,13 @@ const Privacy = () => {
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Data Security</h2>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  We implement appropriate technical and organizational security measures to protect your 
-                  personal information against unauthorized access, alteration, disclosure, or destruction.
+                  We implement appropriate technical and organizational security measures to protect your personal
+                  information against unauthorized access, alteration, disclosure, or destruction.
                 </p>
                 <p className="text-gray-600 dark:text-gray-300">
-                  However, no method of transmission over the internet or electronic storage is 100% secure. 
-                  While we strive to use commercially acceptable means to protect your information, 
-                  we cannot guarantee absolute security.
+                  However, no method of transmission over the internet or electronic storage is 100% secure. While we
+                  strive to use commercially acceptable means to protect your information, we cannot guarantee absolute
+                  security.
                 </p>
               </section>
 
@@ -170,10 +170,10 @@ const Privacy = () => {
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Data Retention</h2>
                 <p className="text-gray-600 dark:text-gray-300">
-                  We retain your personal information only for as long as necessary to fulfill the purposes 
-                  outlined in this Privacy Policy, comply with legal obligations, resolve disputes, 
-                  and enforce our agreements. When you delete your account, we will remove your personal 
-                  information within a reasonable timeframe, except where retention is required by law.
+                  We retain your personal information only for as long as necessary to fulfill the purposes outlined in
+                  this Privacy Policy, comply with legal obligations, resolve disputes, and enforce our agreements. When
+                  you delete your account, we will remove your personal information within a reasonable timeframe,
+                  except where retention is required by law.
                 </p>
               </section>
 
@@ -181,10 +181,10 @@ const Privacy = () => {
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Children's Privacy</h2>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Our services are intended for users aged 13 and above. We do not knowingly collect 
-                  personal information from children under 13. If you are a parent or guardian and 
-                  believe your child has provided us with personal information, please contact us 
-                  immediately so we can delete such information.
+                  Our services are intended for users aged 13 and above. We do not knowingly collect personal
+                  information from children under 13. If you are a parent or guardian and believe your child has
+                  provided us with personal information, please contact us immediately so we can delete such
+                  information.
                 </p>
               </section>
 
@@ -192,10 +192,10 @@ const Privacy = () => {
               <section className="mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Updates to This Policy</h2>
                 <p className="text-gray-600 dark:text-gray-300">
-                  We may update this Privacy Policy from time to time to reflect changes in our practices 
-                  or applicable laws. We will notify you of any material changes by posting the new 
-                  Privacy Policy on our website and updating the "Last updated" date. 
-                  Your continued use of our services after such changes constitutes acceptance of the updated policy.
+                  We may update this Privacy Policy from time to time to reflect changes in our practices or applicable
+                  laws. We will notify you of any material changes by posting the new Privacy Policy on our website and
+                  updating the "Last updated" date. Your continued use of our services after such changes constitutes
+                  acceptance of the updated policy.
                 </p>
               </section>
 
@@ -206,12 +206,17 @@ const Privacy = () => {
                   If you have any questions about this Privacy Policy or our data practices, please contact us:
                 </p>
                 <div className="space-y-2 text-gray-600 dark:text-gray-300">
-                  <p><strong>Email:</strong> privacy@zesho.edu</p>
-                  <p><strong>Address:</strong> ZESHO Platform, Innovation Campus, Tech District</p>
-                  <p><strong>Support:</strong> Available 24/7 through our platform</p>
+                  <p>
+                    <strong>Email:</strong> privacy@zesho.edu
+                  </p>
+                  <p>
+                    <strong>Address:</strong> ZESHO Platform, Innovation Campus, Tech District
+                  </p>
+                  <p>
+                    <strong>Support:</strong> Available 24/7 through our platform
+                  </p>
                 </div>
               </section>
-
             </div>
           </div>
         </div>

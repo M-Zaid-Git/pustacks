@@ -29,15 +29,15 @@ exports.handler = async (event, context) => {
   try {
     // Get admin secret from environment or request
     const adminSecret = process.env.VITE_ADMIN_SECRET || 'como';
-    
+
     // Check for token in body or headers
     let token = null;
-    
+
     if (event.body) {
       const body = JSON.parse(event.body);
       token = body.token || body.secret;
     }
-    
+
     if (!token && event.headers.authorization) {
       token = event.headers.authorization.replace('Bearer ', '');
     }
@@ -46,9 +46,9 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 401,
         headers,
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: 'No authentication token provided',
-          valid: false 
+          valid: false,
         }),
       };
     }
@@ -65,7 +65,7 @@ exports.handler = async (event, context) => {
           user: {
             role: 'admin',
             name: 'Admin User',
-            email: 'admin@zesho.edu'
+            email: 'admin@zesho.edu',
           },
           timestamp: new Date().toISOString(),
         }),
@@ -74,9 +74,9 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 401,
         headers,
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: 'Invalid admin token',
-          valid: false 
+          valid: false,
         }),
       };
     }
@@ -85,9 +85,9 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         message: 'Internal Server Error',
-        valid: false 
+        valid: false,
       }),
     };
   }

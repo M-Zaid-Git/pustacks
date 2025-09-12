@@ -7,6 +7,7 @@ Your ZESHO educational platform is now ready for deployment on Netlify! Follow t
 ### 1. 🔗 Connect GitHub Repository to Netlify
 
 1. **Push to GitHub** (if not already done):
+
    ```bash
    git add .
    git commit -m "Deploy ZESHO to Netlify"
@@ -22,6 +23,7 @@ Your ZESHO educational platform is now ready for deployment on Netlify! Follow t
 ### 2. ⚙️ Configure Build Settings
 
 In Netlify deployment settings:
+
 - **Build command**: `npm run build`
 - **Publish directory**: `dist`
 - **Node version**: `18`
@@ -52,6 +54,7 @@ VITE_CLOUDINARY_API_KEY=your-cloudinary-api-key
 ### 4. 🎯 Deployment Features Available
 
 **✅ Current Features (Static Frontend)**:
+
 - Complete ZESHO platform interface
 - Admin panel with secret code "como"
 - Material browsing and management
@@ -59,6 +62,7 @@ VITE_CLOUDINARY_API_KEY=your-cloudinary-api-key
 - Responsive design with dark/light themes
 
 **🔮 Future Enhancement Options**:
+
 - Netlify Functions for backend API
 - Database integration (MongoDB Atlas)
 - Real file upload with Cloudinary
@@ -67,6 +71,7 @@ VITE_CLOUDINARY_API_KEY=your-cloudinary-api-key
 ### 5. 🌐 Access Your Deployed Site
 
 After deployment:
+
 - **Main Site**: `https://your-site-name.netlify.app`
 - **Admin Panel**: `https://your-site-name.netlify.app/admin/login`
 - **Secret Code**: `como`
@@ -74,12 +79,14 @@ After deployment:
 ### 6. 📊 Current Functionality
 
 **Admin Features**:
+
 - Secure admin login with secret code
 - Material upload and management
 - Real-time statistics dashboard
 - Download tracking and analytics
 
 **User Features**:
+
 - Browse educational materials
 - Search and filter content
 - Category-based navigation
@@ -88,6 +95,7 @@ After deployment:
 ### 7. 🔧 Custom Domain (Optional)
 
 To use your own domain:
+
 1. In Netlify → Domain Settings
 2. Add custom domain
 3. Update DNS records as instructed
@@ -96,6 +104,7 @@ To use your own domain:
 ### 8. 🚀 Performance Optimizations
 
 Your deployment includes:
+
 - **Automatic HTTPS** via Netlify
 - **Global CDN** for fast loading
 - **Build optimization** with Vite
@@ -105,6 +114,7 @@ Your deployment includes:
 ## 🎉 You're Ready to Deploy!
 
 Your ZESHO platform is fully configured for Netlify deployment with:
+
 - ✅ Optimized build configuration
 - ✅ SPA routing setup
 - ✅ Security headers configured

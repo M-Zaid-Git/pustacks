@@ -4,7 +4,7 @@ const convertFileToBase64 = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 };
 
@@ -16,10 +16,10 @@ const CloudImageUpload = async (file, uploadPreset = null) => {
 
     // For now, use base64 conversion (works 100% of the time)
     const base64Url = await convertFileToBase64(file);
-    
+
     // Create a unique ID for the file
     const fileId = `zesho_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Store the file data in localStorage for demo
     const fileData = {
       id: fileId,
@@ -28,16 +28,16 @@ const CloudImageUpload = async (file, uploadPreset = null) => {
       size: file.size,
       base64: base64Url,
       uploadDate: new Date().toISOString(),
-      url: base64Url // For images, we can use base64 directly as URL
+      url: base64Url, // For images, we can use base64 directly as URL
     };
-    
+
     // Save to localStorage
     const existingFiles = JSON.parse(localStorage.getItem('zesho-uploaded-files') || '[]');
     existingFiles.push(fileData);
     localStorage.setItem('zesho-uploaded-files', JSON.stringify(existingFiles));
-    
+
     console.log('✅ File processed successfully!');
-    
+
     return {
       success: true,
       url: base64Url, // This will work for images immediately
@@ -49,16 +49,15 @@ const CloudImageUpload = async (file, uploadPreset = null) => {
       height: null,
       original_filename: file.name,
       created_at: new Date().toISOString(),
-      storage: 'local' // Indicates this is stored locally
+      storage: 'local', // Indicates this is stored locally
     };
-
   } catch (error) {
     console.error('💥 Upload failed:', error);
-    
+
     return {
       success: false,
       error: error.message,
-      details: error
+      details: error,
     };
   }
 };
@@ -66,10 +65,10 @@ const CloudImageUpload = async (file, uploadPreset = null) => {
 // Keep the demo upload function as backup
 const createDemoUpload = (file) => {
   console.log('🎭 Creating demo upload for:', file.name);
-  
+
   // Create a demo URL (for testing purposes)
   const demoUrl = `https://via.placeholder.com/400x300/4f46e5/ffffff?text=${encodeURIComponent(file.name)}`;
-  
+
   return {
     success: true,
     url: demoUrl,
@@ -79,7 +78,7 @@ const createDemoUpload = (file) => {
     bytes: file.size,
     original_filename: file.name,
     created_at: new Date().toISOString(),
-    demo: true
+    demo: true,
   };
 };
 
@@ -87,21 +86,21 @@ const createDemoUpload = (file) => {
 const realCloudinaryUpload = async (file) => {
   const cloudName = 'ZESHO';
   const uploadPreset = 'zesho_uploads'; // This needs to be created in Cloudinary dashboard
-  
+
   const formData = new FormData();
   formData.append('file', file);
   formData.append('upload_preset', uploadPreset);
-  
+
   try {
     const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
       method: 'POST',
       body: formData,
     });
-    
+
     if (!response.ok) {
       throw new Error(`Cloudinary upload failed: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return {
       success: true,
