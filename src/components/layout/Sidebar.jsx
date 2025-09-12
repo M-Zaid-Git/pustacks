@@ -1,5 +1,5 @@
 import React from 'react';
-import { HomeIcon, BookOpenIcon, Cog6ToothIcon, RectangleStackIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, BookOpenIcon, RectangleStackIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 
 const NavItem = ({ icon: Icon, label, active = false, onClick }) => (
@@ -37,8 +37,17 @@ const Sidebar = () => {
     scrollToId('books');
   };
 
+  const onCollections = () => {
+    setActive('Collections');
+    // Ask BooksSection to switch to My Collection and then scroll to books
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('ui:navigate:collection'));
+    }
+    scrollToId('books');
+  };
+
   return (
-    <aside className="hidden md:flex md:flex-col gap-2 w-[16rem] p-4 glass dark:glass-dark border border-white/20 dark:border-slate-700/50 rounded-2xl h-[calc(100vh-2rem)] sticky top-4">
+    <aside className="flex flex-col gap-2 w-[16rem] min-w-0 p-4 glass dark:glass-dark border border-white/20 dark:border-slate-700/50 rounded-2xl h-fit max-h-[calc(100vh-2rem)] sticky top-4">
       <div className="px-2 py-1 mb-2">
         <div className="text-xl font-extrabold tracking-tight text-[color:var(--primary-700)] dark:text-white">
           PUstacks
@@ -47,9 +56,8 @@ const Sidebar = () => {
       </div>
       <NavItem icon={HomeIcon} label="Overview" active={active === 'Overview'} onClick={onOverview} />
       <NavItem icon={BookOpenIcon} label="Books" active={active === 'Books'} onClick={onBooks} />
-      <NavItem icon={RectangleStackIcon} label="Collections" />
-      <div className="mt-auto" />
-      <NavItem icon={Cog6ToothIcon} label="Settings" />
+      <NavItem icon={RectangleStackIcon} label="Collections" active={active === 'Collections'} onClick={onCollections} />
+      {/* Settings removed as requested */}
     </aside>
   );
 };

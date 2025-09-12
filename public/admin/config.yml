@@ -2,8 +2,6 @@ backend:
   name: git-gateway
   branch: main
 
-local_backend: true
-
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
@@ -25,3 +23,4 @@ collections:
       - { label: "Google Drive Link", name: "driveUrl", widget: "string" }
       - { label: "Category", name: "category", widget: "string", required: false, hint: "Leave blank for auto-detect" }
       - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Cover URL (optional)", name: "cover", widget: "string", required: false, hint: "Direct image URL (https://...)" }

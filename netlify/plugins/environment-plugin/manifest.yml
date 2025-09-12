@@ -1,5 +1,0 @@
-name: environment-plugin
-inputs:
-  - name: variables
-    description: Environment variables to set
-    default: {}

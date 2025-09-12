@@ -1,34 +1,84 @@
 [
   {
-    "_id": "sample-1",
-    "title": "Programming Fundamentals with C++",
-    "author": "D.S. Malik",
-    "description": "Complete guide to programming fundamentals using C++.",
-    "category": "Programming Fundamentals",
-    "driveUrl": "https://drive.google.com/file/d/1ABC123XYZ/view"
+    "title": "Model for writers",
+    "category": "First Semester",
+    "driveUrl": "https://drive.google.com/file/d/10d9IICRyUxZkDT0mvp8C7A-BaPmRlXLT/view",
+    "cover": "https://prod-cat-files.macmillan.cloud/MediaResources/Jackets/258W/9781319214722.jpg"
   },
   {
-    "_id": "sample-2",
-    "title": "Computer Networks – A Top Down Approach",
-    "author": "Kurose & Ross",
-    "description": "Networking concepts and protocols in a top-down manner.",
-    "category": "Computer Networks",
-    "driveUrl": "https://drive.google.com/file/d/2DEF456ABC/view"
+    "title": "Elementary Linear Algebra - 12th Ed.",
+    "category": "Third Semester",
+    "driveUrl": "https://drive.google.com/file/d/1P9NqCEDALAavCs876RKnMi_Q7L3wBSa7/view?usp=sharing",
+    "cover": "https://m.media-amazon.com/images/I/61JRg8KIRqL._SY425_.jpg"
   },
   {
-    "_id": "sample-3",
-    "title": "Operating System Concepts",
-    "author": "Silberschatz et al.",
-    "description": "Classic text on operating systems.",
-    "category": "Operating Systems",
-    "driveUrl": "https://drive.google.com/file/d/4JKL012GHI/view"
+    "title": "Thomas Calculus - 14th Edition",
+    "category": "First Semester",
+    "driveUrl": "https://drive.google.com/file/d/10fRNRMM5IFa4sQmr3QJua8Z0uiFIdK-_/view?usp=drive_link",
+    "cover": "https://cdn.numerade.com/books/9780134438986.jpg"
   },
   {
-    "_id": "sample-4",
-    "title": "Data Structures and Algorithms",
-    "author": "Cormen et al.",
-    "description": "Introduction to algorithms and data structures.",
-    "category": "Discrete Mathematics",
-    "driveUrl": "https://drive.google.com/file/d/6PQR678MNO/view"
+    "title": "C++ How to program - 8th Ed.",
+    "category": "First Semester",
+    "driveUrl": "https://drive.google.com/file/d/1m6R8rPdINWeoxmArneybliYGzinNVC0a/view?usp=sharing",
+    "cover": "https://deitel.com/wp-content/uploads/2020/01/c-plus-plus-how-to-program-10e.jpg"
+  },
+  {
+    "title": "Islamiat Notes - English",
+    "category": "First Semester",
+    "driveUrl": "https://drive.google.com/file/d/17GepoinEGBWnBnr9M5CW2uL71eXeXY6D/view?usp=sharing"
+  },
+  {
+    "title": "Ideology and Constitution of Pakistan Notes - English",
+    "category": "First Semester",
+    "driveUrl": "https://drive.google.com/file/d/1eym-yFnEoCAytodXkBLyXoS6BdjLDs5J/view?usp=sharing"
+  },
+  {
+    "title": "Fundamentals of Physics - 10th Ed.",
+    "category": "First Semester",
+    "driveUrl": "https://drive.google.com/file/d/1i7UTEQHQR62BMYpcZ5weV9hesbdU2i51/view?usp=sharing",
+    "cover": "https://m.media-amazon.com/images/I/61PJzaghcSL._SX342_SY445_.jpg"
+  },
+  {
+    "title": "Logics and Computer Desgin Fundamentals - 5th Ed.",
+    "category": "Second Semester",
+    "driveUrl": "https://drive.google.com/file/d/10EAHqo0t26_f7wCjZZX6XUcBMMKGRUDv/view?usp=sharing",
+    "cover": "https://m.media-amazon.com/images/I/91x5JUXODyL._SL1500_.jpg"
+  },
+  {
+    "title": "Differential Equations - 7th Ed.",
+    "category": "Second Semester",
+    "driveUrl": "https://drive.google.com/drive/folders/1voEqI_BUmuKVRdAKb0Jva4htdYz8rxVF",
+    "cover": "https://m.media-amazon.com/images/I/51uprQ7q4YL._SX342_SY445_.jpg"
+  },
+  {
+    "title": "Discrete Mathematics and Its Applications - 8th Ed.",
+    "category": "Third Semester",
+    "driveUrl": "https://drive.google.com/file/d/1pAbnBfh0mMD8mpEIA2kZzA7elPr3GWDT/view?usp=sharing",
+    "cover": "https://m.media-amazon.com/images/I/61UWYvar6eL._SY425_.jpg"
+  },
+  {
+    "title": "Fundamentals of Database Systems - 7th Ed.",
+    "category": "Fourth Semester",
+    "driveUrl": "https://drive.google.com/file/d/1ZFsiL8b0rGiM4cjc1dWWQneIxCUHTZ6y/view?usp=sharing",
+    "cover": "https://m.media-amazon.com/images/I/71ocXCxUQVL._SL1500_.jpg"
+  },
+  {
+    "title": "Operating Systems Concepts - 10th Ed.",
+    "category": "Fourth Semester",
+    "driveUrl": "https://drive.google.com/file/d/1eZG3sgEhmU-IuZ7h94IuV9JQbAAXuR_v/view?usp=sharing",
+    "cover": "https://m.media-amazon.com/images/I/81SwKCia7VL._SY425_.jpg"
+  },
+  {
+    "title": "Probability and Statistics for Engineers and Scientists - 9th Ed.",
+    "category": "Fourth Semester",
+    "driveUrl": "https://drive.google.com/file/d/1ldpaMGmjJLo4EXPzb6pW57n0Rr6X2cro/view?usp=sharing",
+    "cover": "https://m.media-amazon.com/images/I/61cpY2rSudL._SY425_.jpg"
+  },
+  {
+    "title": "Statistics for Business and Economics - 13th Ed.",
+    "category": "Fourth Semester",
+    "driveUrl": "https://drive.google.com/file/d/1GFxxk3jqAtILAKjiWLgK1JCuvaHXI92d/view?usp=sharing",
+    "cover": "https://m.media-amazon.com/images/I/518fGr85eJL._SX342_SY445_.jpg"
   }
 ]

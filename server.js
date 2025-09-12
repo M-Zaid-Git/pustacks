@@ -6,23 +6,15 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import connectDB from './config/db.js';
 
-// Route imports
-import userRoutes from './routes/userRoutes.js';
-import materialRoutes from './routes/materialRoutes.js';
+// Route imports (only books in no-DB mode)
 import bookRoutes from './routes/bookRoutes.js';
 
 // Load environment variables
 dotenv.config();
 
-// Optional DB connection (disabled by default for no-DB mode)
-const USE_DB = process.env.USE_DB === 'true';
-if (USE_DB) {
-  connectDB();
-} else {
-  console.log('🗃️  No-DB mode: Skipping MongoDB connection');
-}
+// No-DB mode: skip any database connections
+console.log('🗃️  No-DB mode: Skipping MongoDB connection');
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -45,8 +37,6 @@ app.use(
 );
 
 // API Routes
-app.use('/api', userRoutes);
-app.use('/api', materialRoutes);
 app.use('/api/books', bookRoutes);
 
 // Serve static files from the React app in production

@@ -5,7 +5,8 @@ import vm from 'vm';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 
-const RAW_URL = 'https://raw.githubusercontent.com/iMuhammadWali/Book-Finding-App/main/data/nucesBooks.js';
+// Using local dataset exclusively per project requirement
+// const RAW_URL = 'https://raw.githubusercontent.com/iMuhammadWali/Book-Finding-App/main/data/nucesBooks.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const FALLBACK_JSON = path.resolve(__dirname, '../data/nucesBooks.local.json');
@@ -13,7 +14,7 @@ const CUSTOM_JSON = path.resolve(__dirname, '../data/customBooks.json');
 const CMS_BOOKS_DIR = path.resolve(__dirname, '../data/books');
 
 let CACHE = { ts: 0, data: [] };
-const TTL_MS = 15 * 60 * 1000; // 15 minutes
+const TTL_MS = 30 * 1000; // 30 seconds for quicker updates
 
 // Subject classification based on title keywords
 const SUBJECTS = [
@@ -41,32 +42,13 @@ function classifySubject(title) {
   return null;
 }
 
-function fetchText(url) {
-  return new Promise((resolve, reject) => {
-    https
-      .get(url, (res) => {
-        if (res.statusCode !== 200) {
-          reject(new Error(`Failed to fetch ${url} - status ${res.statusCode}`));
-          res.resume();
-          return;
-        }
-        let data = '';
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => (data += chunk));
-        res.on('end', () => resolve(data));
-      })
-      .on('error', reject);
-  });
-}
+// Remote fetch disabled; operating from local JSON only.
 
-function extractArray(jsCode) {
-  const code = jsCode.replace(/export\s+default\s+NUCES_Books\s*;/, 'globalThis.NUCES_Books = NUCES_Books;');
-  const sandbox = { globalThis: {} };
-  vm.createContext(sandbox);
-  vm.runInContext(code, sandbox, { timeout: 2000 });
-  const arr = sandbox.globalThis.NUCES_Books;
-  if (!Array.isArray(arr)) throw new Error('NUCES_Books not found');
-  return arr;
+function normalizeCover(possibleUrl) {
+  if (!possibleUrl || typeof possibleUrl !== 'string') return '';
+  // Ignore relative thumbnails like "/defaultNucesCover.png" that won't exist here
+  if (possibleUrl.startsWith('/')) return '';
+  return possibleUrl;
 }
 
 function normalizeDriveShareLink(possibleUrl) {
@@ -100,7 +82,8 @@ function mapItem(it, source = 'remote') {
   const driveUrl = normalizeDriveShareLink(rawUrl);
   if (!title || !driveUrl) return null;
   const author = it.author || it?.volumeInfo?.authors?.[0] || undefined;
-  return { _id: idFromUrl(driveUrl), title, description, category, driveUrl, author, source };
+  const cover = normalizeCover(it?.volumeInfo?.imageLinks?.thumbnail || it?.thumbnail);
+  return { _id: idFromUrl(driveUrl), title, description, category, driveUrl, author, cover, source };
 }
 
 function readJsonSafe(p) {
@@ -151,74 +134,40 @@ export async function getBooksFromSource() {
     return CACHE.data;
   }
 
-  try {
-    const js = await fetchText(RAW_URL);
-    const raw = extractArray(js);
-  const mappedRemote = raw.map((x) => mapItem(x, 'remote')).filter(Boolean);
-  // Merge with custom local additions if present
+  // Local JSON only
+  const text = fs.readFileSync(FALLBACK_JSON, 'utf8');
+  const raw = JSON.parse(text);
+  const mappedLocal = raw.map((x) => mapItem(x, 'local')).filter(Boolean);
   const custom = readJsonSafe(CUSTOM_JSON) || [];
   const cmsItems = readAllJsonInDir(CMS_BOOKS_DIR);
-    const mappedCustom = custom
-      .map((c) => ({
-        _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
-        title: c.title?.trim(),
-        author: c.author,
-        driveUrl: normalizeDriveShareLink(c.link || c.driveUrl),
-        description: c.description || 'Added resource',
-        category: classifySubject(c.title) || c.category || 'General',
-        source: 'custom',
-      }))
-      .filter((b) => b.title && b.driveUrl);
+  const mappedCustom = custom
+    .map((c) => ({
+      _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
+      title: c.title?.trim(),
+      author: c.author,
+      driveUrl: normalizeDriveShareLink(c.link || c.driveUrl),
+      description: c.description || 'Added resource',
+      category: classifySubject(c.title) || c.category || 'General',
+      cover: normalizeCover(c.cover),
+      source: 'custom',
+    }))
+    .filter((b) => b.title && b.driveUrl);
+  const mappedCms = cmsItems
+    .map((c) => ({
+      _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
+      title: c.title?.trim(),
+      author: c.author,
+      driveUrl: normalizeDriveShareLink(c.driveUrl || c.link),
+      description: c.description || 'CMS resource',
+      category: classifySubject(c.title) || c.category || 'General',
+      cover: normalizeCover(c.cover),
+      source: 'cms',
+    }))
+    .filter((b) => b.title && b.driveUrl);
 
-    const mappedCms = cmsItems
-      .map((c) => ({
-        _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
-        title: c.title?.trim(),
-        author: c.author,
-        driveUrl: normalizeDriveShareLink(c.driveUrl || c.link),
-        description: c.description || 'CMS resource',
-        category: classifySubject(c.title) || c.category || 'General',
-        source: 'cms',
-      }))
-      .filter((b) => b.title && b.driveUrl);
-
-    const merged = dedupeBooks([...mappedRemote, ...mappedCustom, ...mappedCms]);
-    CACHE = { ts: now, data: merged };
-    return merged;
-  } catch (e) {
-    // Fallback to local JSON
-    try {
-      const text = fs.readFileSync(FALLBACK_JSON, 'utf8');
-      const raw = JSON.parse(text);
-  const mappedFallback = raw.map((x) => mapItem(x, 'fallback')).filter(Boolean);
-  const custom = readJsonSafe(CUSTOM_JSON) || [];
-  const cmsItems = readAllJsonInDir(CMS_BOOKS_DIR);
-      const mappedCustom = custom
-        .map((c) => ({
-          _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
-          title: c.title?.trim(),
-          author: c.author,
-          driveUrl: normalizeDriveShareLink(c.link || c.driveUrl),
-          description: c.description || 'Added resource',
-          category: classifySubject(c.title) || c.category || 'General',
-          source: 'custom',
-        }))
-        .filter((b) => b.title && b.driveUrl);
-      const mappedCms = cmsItems
-        .map((c) => ({
-          _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
-          title: c.title?.trim(),
-          author: c.author,
-          driveUrl: normalizeDriveShareLink(c.driveUrl || c.link),
-          description: c.description || 'CMS resource',
-          category: classifySubject(c.title) || c.category || 'General',
-          source: 'cms',
-        }))
-        .filter((b) => b.title && b.driveUrl);
-      const merged = dedupeBooks([...mappedFallback, ...mappedCustom, ...mappedCms]);
-      CACHE = { ts: now, data: merged };
-      return merged;
-    } catch (err) {
+  const merged = dedupeBooks([...mappedLocal, ...mappedCustom, ...mappedCms]);
+  CACHE = { ts: now, data: merged };
+  return merged;
       // If fallback also fails, bubble up the original error
       throw e;
     }

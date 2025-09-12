@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { toDirectDownload } from '../utils/drive';
 import useTilt from '../utils/useTilt';
+import { isSaved, toggleSaved } from '../utils/collection';
 
 const BookCard = ({ book }) => {
   const driveUrl = book.driveUrl || '#';
   const directUrl = toDirectDownload(driveUrl);
+  const key = book._id || book.driveUrl || book.title;
+  const [saved, setSaved] = useState(isSaved(key));
 
   const handleDownload = () => {
     if (directUrl && directUrl !== '#') {
@@ -20,6 +23,20 @@ const BookCard = ({ book }) => {
 
   const tiltRef = useTilt({ maxTilt: 10, scale: 1.02, glare: true });
 
+  useEffect(() => {
+    const onChanged = (e) => {
+      const keys = e.detail?.keys || [];
+      setSaved(keys.includes(key));
+    };
+    window.addEventListener('collection:changed', onChanged);
+    return () => window.removeEventListener('collection:changed', onChanged);
+  }, [key]);
+
+  const handleToggleSave = () => {
+    toggleSaved(key);
+    setSaved(isSaved(key));
+  };
+
   return (
     <div
       ref={tiltRef}
@@ -27,13 +44,42 @@ const BookCard = ({ book }) => {
     >
       {/* Book-like cover header */}
       <div className="book-cover h-40 relative">
-        <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-sm">
-          PDF
-        </div>
+        <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-sm">PDF</div>
         <div
           className="absolute top-0 right-4 w-0 h-0 border-l-8 border-r-8 border-b-[14px] border-l-transparent border-r-transparent border-b-rose-400"
           title="Bookmark"
         />
+        <button
+          onClick={handleToggleSave}
+          className={
+            'absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-semibold shadow-sm transition ' +
+            (saved
+              ? 'bg-amber-400/90 hover:bg-amber-500 text-black'
+              : 'bg-slate-800/70 hover:bg-slate-800 text-white')
+          }
+          title={saved ? 'Remove from Collection' : 'Add to Collection'}
+        >
+          {saved ? 'Saved' : 'Save'}
+        </button>
+        {book.cover ? (
+          <img
+            src={book.cover}
+            alt={book.title}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/overview-image.jpg';
+            }}
+            className="absolute inset-0 w-full h-full object-cover opacity-90"
+            loading="lazy"
+          />
+        ) : (
+          <img
+            src="/overview-image.jpg"
+            alt="Default cover"
+            className="absolute inset-0 w-full h-full object-cover opacity-90"
+            loading="lazy"
+          />
+        )}
         <div className="book-title-overlay">
           <span className="line-clamp-1">{book.title}</span>
         </div>

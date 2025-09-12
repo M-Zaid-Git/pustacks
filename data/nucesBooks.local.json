@@ -1,18 +1,178 @@
 [
   {
+    "id": 1,
+    "volumeInfo": {
+      "title": "Model for writers",
+      "imageLinks": {
+        "thumbnail": "https://prod-cat-files.macmillan.cloud/MediaResources/Jackets/258W/9781319214722.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["First Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/10d9IICRyUxZkDT0mvp8C7A-BaPmRlXLT/view"
+  },
+  {
+    "id": 2,
     "volumeInfo": {
       "title": "Elementary Linear Algebra - 12th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/61JRg8KIRqL._SY425_.jpg"
+      },
       "description": "No Description.",
       "categories": ["Third Semester"]
     },
-    "downloadLink": "https://drive.google.com/file/d/1P9NqCEDALAavCs876RKnMi_Q7L3wBSa7/view?usp=sharing"
+    "downloadLink": "https://drive.google.com/file/d/1P9NqCEDALAavCs876RKnMi_Q7L3wBSa7/view?usp=sharing",
+    "solutionLink": "https://drive.google.com/file/d/1h_UMQ2nlkUK09889p19TUKpeSbLq5im1/view?usp=sharing"
   },
   {
+    "id": 3,
+    "volumeInfo": {
+      "title": "Thomas Calculus - 14th Edition",
+      "imageLinks": {
+        "thumbnail": "https://cdn.numerade.com/books/9780134438986.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["First Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/10fRNRMM5IFa4sQmr3QJua8Z0uiFIdK-_/view?usp=drive_link",
+    "solutionLink": "https://drive.google.com/file/d/10qeYnjtdn56EOo4A1jwGANTStHtkfuOf/view?usp=drive_link"
+  },
+  {
+    "id": 4,
+    "volumeInfo": {
+      "title": "C++ How to program - 8th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://deitel.com/wp-content/uploads/2020/01/c-plus-plus-how-to-program-10e.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["First Semester", "Second Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/1m6R8rPdINWeoxmArneybliYGzinNVC0a/view?usp=sharing"
+  },
+  {
+    "id": 5,
+    "volumeInfo": {
+      "title": "Islamiat Notes - English",
+      "imageLinks": {
+        "thumbnail": "/defaultNucesCover.png"
+      },
+      "description": "No Description.",
+      "categories": ["First Semester", "Second Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/17GepoinEGBWnBnr9M5CW2uL71eXeXY6D/view?usp=sharing"
+  },
+  {
+    "id": 6,
+    "volumeInfo": {
+      "title": "Ideology and Constitution of Pakistan Notes - English",
+      "imageLinks": {
+        "thumbnail": "/defaultNucesCover.png"
+      },
+      "description": "No Description.",
+      "categories": ["First Semester", "Second Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/1eym-yFnEoCAytodXkBLyXoS6BdjLDs5J/view?usp=sharing"
+  },
+  {
+    "id": 7,
+    "volumeInfo": {
+      "title": "Fundamentals of Physics - 10th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/61PJzaghcSL._SX342_SY445_.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["First Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/1i7UTEQHQR62BMYpcZ5weV9hesbdU2i51/view?usp=sharing",
+    "solutionLink": "https://drive.google.com/file/d/1iR_TrWQHCP_gbmrGnW-4uqtc65jfoV9h/view?usp=sharing"
+  },
+  {
+    "id": 8,
+    "volumeInfo": {
+      "title": "Logics and Computer Desgin Fundamentals - 5th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/91x5JUXODyL._SL1500_.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["Second Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/10EAHqo0t26_f7wCjZZX6XUcBMMKGRUDv/view?usp=sharing",
+    "solutionLink": "https://drive.google.com/file/d/12NqepSEST4NqVZR6g-EfSgXzP_I0QFsu/view?usp=sharing"
+  },
+  {
+    "id": 9,
+    "volumeInfo": {
+      "title": "Differential Equations - 7th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/51uprQ7q4YL._SX342_SY445_.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["Second Semester"]
+    },
+    "downloadLink": "https://drive.google.com/drive/folders/1voEqI_BUmuKVRdAKb0Jva4htdYz8rxVF",
+    "solutionLink": "https://drive.google.com/drive/folders/1voEqI_BUmuKVRdAKb0Jva4htdYz8rxVF"
+  },
+  {
+    "id": 10,
+    "volumeInfo": {
+      "title": "Discrete Mathematics and Its Applications - 8th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/61UWYvar6eL._SY425_.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["Third Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/1pAbnBfh0mMD8mpEIA2kZzA7elPr3GWDT/view?usp=sharing",
+    "solutionLink": "https://drive.google.com/file/d/12ML3MYjFGfSfH1xSKldilXuG5Rzavh2T/view?usp=sharing",
+    "solutionLink2": "https://drive.google.com/file/d/1MjMar-V1uwwdbSOBhPr_QAxNomMoopcM/view?usp=sharing"
+  },
+  {
+    "id": 11,
+    "volumeInfo": {
+      "title": "Fundamentals of Database Systems - 7th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/71ocXCxUQVL._SL1500_.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["Fourth Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/1ZFsiL8b0rGiM4cjc1dWWQneIxCUHTZ6y/view?usp=sharing"
+  },
+  {
+    "id": 12,
     "volumeInfo": {
       "title": "Operating Systems Concepts - 10th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/81SwKCia7VL._SY425_.jpg"
+      },
       "description": "No Description.",
       "categories": ["Fourth Semester"]
     },
     "downloadLink": "https://drive.google.com/file/d/1eZG3sgEhmU-IuZ7h94IuV9JQbAAXuR_v/view?usp=sharing"
+  },
+  {
+    "id": 13,
+    "volumeInfo": {
+      "title": "Probability and Statistics for Engineers and Scientists - 9th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/61cpY2rSudL._SY425_.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["Fourth Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/1ldpaMGmjJLo4EXPzb6pW57n0Rr6X2cro/view?usp=sharing",
+    "solutionLink": "https://drive.google.com/file/d/1-v4LZLySB8t-MHtoCrQBQgxOTYsDfHCY/view?usp=sharing"
+  },
+  {
+    "id": 14,
+    "volumeInfo": {
+      "title": "Statistics for Business and Economics - 13th Ed.",
+      "imageLinks": {
+        "thumbnail": "https://m.media-amazon.com/images/I/518fGr85eJL._SX342_SY445_.jpg"
+      },
+      "description": "No Description.",
+      "categories": ["Fourth Semester"]
+    },
+    "downloadLink": "https://drive.google.com/file/d/1GFxxk3jqAtILAKjiWLgK1JCuvaHXI92d/view?usp=sharing"
   }
 ]
