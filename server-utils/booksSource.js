@@ -116,6 +116,47 @@ function readAllJsonInDir(dirPath) {
   }
 }
 
+// Optionally fetch CMS entries directly from GitHub so new admin publishes appear
+// without waiting for a new Netlify build. Controlled via env and disabled by default.
+async function fetchCmsFromGithub() {
+  try {
+    const enabled = process.env.ENABLE_GH_CMS_FETCH === '1' || process.env.ENABLE_GITHUB_CMS_FETCH === '1';
+    const owner = process.env.GH_OWNER || process.env.GITHUB_OWNER;
+    const repo = process.env.GH_REPO || process.env.GITHUB_REPO;
+    const ref = process.env.GH_REF || process.env.GITHUB_REF || 'main';
+    if (!enabled || !owner || !repo) return [];
+    const api = `https://api.github.com/repos/${owner}/${repo}/contents/data/books?ref=${encodeURIComponent(ref)}`;
+    const headers = {
+      'User-Agent': 'netlify-fn-books',
+      Accept: 'application/vnd.github+json',
+    };
+    const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.PERSONAL_GITHUB_TOKEN;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetch(api, { headers });
+    if (!res.ok) return [];
+    const list = await res.json();
+    if (!Array.isArray(list)) return [];
+    const files = list.filter((it) => it.type === 'file' && /\.json$/i.test(it.name));
+    const out = [];
+    // Parallel fetch with small concurrency
+    const chunks = await Promise.all(
+      files.map(async (f) => {
+        try {
+          const r = await fetch(f.download_url, { headers });
+          if (!r.ok) return null;
+          const obj = await r.json();
+          if (obj && typeof obj === 'object') return obj;
+        } catch {}
+        return null;
+      })
+    );
+    for (const c of chunks) if (c) out.push(c);
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 function dedupeBooks(list) {
   const seen = new Set();
   const result = [];
@@ -128,9 +169,9 @@ function dedupeBooks(list) {
   return result;
 }
 
-export async function getBooksFromSource() {
+export async function getBooksFromSource(force = false) {
   const now = Date.now();
-  if (CACHE.data.length && now - CACHE.ts < TTL_MS) {
+  if (CACHE.data.length && now - CACHE.ts < TTL_MS && !force) {
     return CACHE.data;
   }
 
@@ -140,6 +181,7 @@ export async function getBooksFromSource() {
   const mappedLocal = raw.map((x) => mapItem(x, 'local')).filter(Boolean);
   const custom = readJsonSafe(CUSTOM_JSON) || [];
   const cmsItems = readAllJsonInDir(CMS_BOOKS_DIR);
+  const githubCms = await fetchCmsFromGithub();
   const mappedCustom = custom
     .map((c) => ({
       _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
@@ -152,7 +194,7 @@ export async function getBooksFromSource() {
       source: 'custom',
     }))
     .filter((b) => b.title && b.driveUrl);
-  const mappedCms = cmsItems
+  const mappedCmsLocal = cmsItems
     .map((c) => ({
       _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
       title: c.title?.trim(),
@@ -165,11 +207,25 @@ export async function getBooksFromSource() {
     }))
     .filter((b) => b.title && b.driveUrl);
 
-  const merged = dedupeBooks([...mappedLocal, ...mappedCustom, ...mappedCms]);
+  const mappedCmsGithub = (Array.isArray(githubCms) ? githubCms : [])
+    .map((c) => ({
+      _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
+      title: c.title?.trim(),
+      author: c.author,
+      driveUrl: normalizeDriveShareLink(c.driveUrl || c.link),
+      description: c.description || 'CMS resource',
+      category: classifySubject(c.title) || c.category || 'General',
+      cover: normalizeCover(c.cover),
+      source: 'cms-github',
+    }))
+    .filter((b) => b.title && b.driveUrl);
+
+  const merged = dedupeBooks([
+    ...mappedLocal,
+    ...mappedCustom,
+    ...mappedCmsLocal,
+    ...mappedCmsGithub,
+  ]);
   CACHE = { ts: now, data: merged };
   return merged;
-      // If fallback also fails, bubble up the original error
-      throw e;
-    }
-  }
 }

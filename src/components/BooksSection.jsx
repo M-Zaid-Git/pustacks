@@ -51,7 +51,7 @@ const BooksSection = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch('/api/books');
+  const res = await fetch('/api/books?revalidate=1');
         if (!res.ok) throw new Error('api failed');
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -61,7 +61,7 @@ const BooksSection = () => {
         throw new Error('api empty');
       } catch {
         try {
-          const res2 = await fetch('/.netlify/functions/books');
+          const res2 = await fetch('/.netlify/functions/books?revalidate=1');
           if (!res2.ok) throw new Error('fn failed');
           const data2 = await res2.json();
           if (Array.isArray(data2) && data2.length > 0) {
