@@ -106,7 +106,11 @@ const Topbar = () => {
                 A
               </button>
               <DarkMode />
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-md" />
+              <img 
+                src="/profile-avatar.jpg" 
+                alt="Profile" 
+                className="h-8 w-8 rounded-full shadow-md object-cover border-2 border-white/20" 
+              />
             </div>
           </div>
           
@@ -254,7 +258,11 @@ const Topbar = () => {
               <div className="hidden sm:block h-6 w-px bg-gray-300 dark:bg-gray-600" />
 
               {/* User Avatar */}
-              <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-md hover:shadow-lg transition-shadow cursor-pointer" />
+              <img 
+                src="/profile-avatar.jpg" 
+                alt="Profile" 
+                className="h-8 w-8 sm:h-9 sm:w-9 rounded-full shadow-md hover:shadow-lg transition-shadow cursor-pointer object-cover border-2 border-white/20" 
+              />
 
               {/* Admin Link - Hidden on very small screens */}
               <a
