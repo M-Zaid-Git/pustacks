@@ -12,6 +12,7 @@ const __dirname = path.dirname(__filename);
 const FALLBACK_JSON = path.resolve(__dirname, '../data/nucesBooks.local.json');
 const CUSTOM_JSON = path.resolve(__dirname, '../data/customBooks.json');
 const CMS_BOOKS_DIR = path.resolve(__dirname, '../data/books');
+const CMS_MASTER_JSON = path.resolve(__dirname, '../data/books.master.json');
 
 let CACHE = { ts: 0, data: [] };
 const TTL_MS = 30 * 1000; // 30 seconds for quicker updates
@@ -178,9 +179,43 @@ export async function getBooksFromSource(force = false) {
   // Local JSON only
   const text = fs.readFileSync(FALLBACK_JSON, 'utf8');
   const raw = JSON.parse(text);
-  const mappedLocal = raw.map((x) => mapItem(x, 'local')).filter(Boolean);
+  let mappedLocal = [];
+  let mappedLocalFlat = [];
+  if (Array.isArray(raw)) {
+    mappedLocal = raw.map((x) => mapItem(x, 'local')).filter(Boolean);
+  } else if (raw && typeof raw === 'object') {
+    const nucesArr = Array.isArray(raw.raw)
+      ? raw.raw
+      : Array.isArray(raw.items)
+      ? raw.items
+      : Array.isArray(raw.books)
+      ? raw.books
+      : [];
+    const cmsFlat = Array.isArray(raw.cmsItems) ? raw.cmsItems : [];
+    mappedLocal = nucesArr.map((x) => mapItem(x, 'local')).filter(Boolean);
+    mappedLocalFlat = cmsFlat
+      .map((c) => ({
+        _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
+        title: c.title?.trim(),
+        author: c.author,
+        driveUrl: normalizeDriveShareLink(c.link || c.driveUrl),
+        description: c.description || 'Added resource',
+        category: classifySubject(c.title) || c.category || 'General',
+        cover: normalizeCover(c.cover),
+        source: 'local-cms',
+      }))
+      .filter((b) => b.title && b.driveUrl);
+  }
   const custom = readJsonSafe(CUSTOM_JSON) || [];
   const cmsItems = readAllJsonInDir(CMS_BOOKS_DIR);
+  const cmsMasterRaw = readJsonSafe(CMS_MASTER_JSON) || [];
+  const cmsMasterArr = Array.isArray(cmsMasterRaw)
+    ? cmsMasterRaw
+    : Array.isArray(cmsMasterRaw.items)
+    ? cmsMasterRaw.items
+    : Array.isArray(cmsMasterRaw.books)
+    ? cmsMasterRaw.books
+    : [];
   const githubCms = await fetchCmsFromGithub();
   const mappedCustom = custom
     .map((c) => ({
@@ -220,11 +255,26 @@ export async function getBooksFromSource(force = false) {
     }))
     .filter((b) => b.title && b.driveUrl);
 
+  const mappedCmsMaster = cmsMasterArr
+    .map((c) => ({
+      _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
+      title: c.title?.trim(),
+      author: c.author,
+      driveUrl: normalizeDriveShareLink(c.driveUrl || c.link),
+      description: c.description || 'CMS resource',
+      category: classifySubject(c.title) || c.category || 'General',
+      cover: normalizeCover(c.cover),
+      source: 'cms-master',
+    }))
+    .filter((b) => b.title && b.driveUrl);
+
   const merged = dedupeBooks([
     ...mappedLocal,
+    ...mappedLocalFlat,
     ...mappedCustom,
     ...mappedCmsLocal,
     ...mappedCmsGithub,
+    ...mappedCmsMaster,
   ]);
   CACHE = { ts: now, data: merged };
   return merged;

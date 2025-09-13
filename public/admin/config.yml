@@ -24,3 +24,36 @@ collections:
       - { label: "Category", name: "category", widget: "string", required: false, hint: "Leave blank for auto-detect" }
       - { label: "Description", name: "description", widget: "text", required: false }
       - { label: "Cover URL (optional)", name: "cover", widget: "string", required: false, hint: "Direct image URL (https://...)" }
+
+  - name: "books_master"
+    label: "Books Master (single file)"
+    files:
+      - label: "NUCES + CMS Books"
+        name: "nucesBooksLocal"
+        file: "data/nucesBooks.local.json"
+        description: "Edit cmsItems to add/remove books. Raw NUCES list remains untouched."
+        fields:
+          - label: "Raw NUCES Items (read-only)"
+            name: "raw"
+            widget: "list"
+            collapsed: true
+            summary: "{{fields.volumeInfo.title}}"
+            fields:
+              - { label: "Title", name: "volumeInfo.title", widget: "string" }
+              - { label: "Thumbnail", name: "volumeInfo.imageLinks.thumbnail", widget: "string", required: false }
+              - { label: "Description", name: "volumeInfo.description", widget: "text", required: false }
+              - { label: "Categories", name: "volumeInfo.categories", widget: "list", default: [] }
+              - { label: "Download Link", name: "downloadLink", widget: "string" }
+              - { label: "Solution Link", name: "solutionLink", widget: "string", required: false }
+            hint: "This section is for reference and should not be edited unless necessary."
+          - label: "CMS Items"
+            name: "cmsItems"
+            widget: "list"
+            summary: "{{title}} — {{author}} ({{category}})"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Author", name: "author", widget: "string", required: false }
+              - { label: "Google Drive Link", name: "driveUrl", widget: "string" }
+              - { label: "Category", name: "category", widget: "string", required: false, hint: "Leave blank for auto-detect" }
+              - { label: "Description", name: "description", widget: "text", required: false }
+              - { label: "Cover URL (optional)", name: "cover", widget: "string", required: false, hint: "Direct image URL (https://...)" }
