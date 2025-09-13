@@ -158,11 +158,39 @@ async function fetchCmsFromGithub() {
   }
 }
 
+// Fetch a single JSON file from GitHub (e.g., data/nucesBooks.local.json)
+async function fetchGithubJsonFile(relPath) {
+  try {
+    const enabled = process.env.ENABLE_GH_CMS_FETCH === '1' || process.env.ENABLE_GITHUB_CMS_FETCH === '1';
+    const owner = process.env.GH_OWNER || process.env.GITHUB_OWNER;
+    const repo = process.env.GH_REPO || process.env.GITHUB_REPO;
+    const ref = process.env.GH_REF || process.env.GITHUB_REF || 'main';
+    if (!enabled || !owner || !repo) return null;
+    const api = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(relPath)}?ref=${encodeURIComponent(ref)}`;
+    const headers = {
+      'User-Agent': 'netlify-fn-books',
+      Accept: 'application/vnd.github+json',
+    };
+    const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.PERSONAL_GITHUB_TOKEN;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const meta = await fetch(api, { headers });
+    if (!meta.ok) return null;
+    const metaJson = await meta.json();
+    const url = metaJson.download_url;
+    if (!url) return null;
+    const res = await fetch(url, { headers });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 function dedupeBooks(list) {
   const seen = new Set();
   const result = [];
   for (const b of list) {
-    const key = (b.driveUrl || '') + '|' + (b.title || '');
+    const key = b.driveUrl ? `url:${b.driveUrl}` : `title:${b.title || ''}`;
     if (seen.has(key)) continue;
     seen.add(key);
     result.push(b);
@@ -181,6 +209,8 @@ export async function getBooksFromSource(force = false) {
   const raw = JSON.parse(text);
   let mappedLocal = [];
   let mappedLocalFlat = [];
+  // Attempt to fetch the latest single-file from GitHub for instant CMS updates
+  const ghSingle = await fetchGithubJsonFile('data/nucesBooks.local.json');
   if (Array.isArray(raw)) {
     mappedLocal = raw.map((x) => mapItem(x, 'local')).filter(Boolean);
   } else if (raw && typeof raw === 'object') {
@@ -203,6 +233,33 @@ export async function getBooksFromSource(force = false) {
         category: classifySubject(c.title) || c.category || 'General',
         cover: normalizeCover(c.cover),
         source: 'local-cms',
+      }))
+      .filter((b) => b.title && b.driveUrl);
+  }
+  let ghMappedLocal = [];
+  let ghMappedLocalFlat = [];
+  if (ghSingle && typeof ghSingle === 'object') {
+    const nucesArr = Array.isArray(ghSingle.raw)
+      ? ghSingle.raw
+      : Array.isArray(ghSingle.items)
+      ? ghSingle.items
+      : Array.isArray(ghSingle.books)
+      ? ghSingle.books
+      : Array.isArray(ghSingle)
+      ? ghSingle
+      : [];
+    const cmsFlat = Array.isArray(ghSingle.cmsItems) ? ghSingle.cmsItems : [];
+    ghMappedLocal = nucesArr.map((x) => mapItem(x, 'local-gh')).filter(Boolean);
+    ghMappedLocalFlat = cmsFlat
+      .map((c) => ({
+        _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
+        title: c.title?.trim(),
+        author: c.author,
+        driveUrl: normalizeDriveShareLink(c.link || c.driveUrl),
+        description: c.description || 'Added resource',
+        category: classifySubject(c.title) || c.category || 'General',
+        cover: normalizeCover(c.cover),
+        source: 'local-cms-gh',
       }))
       .filter((b) => b.title && b.driveUrl);
   }
@@ -271,6 +328,8 @@ export async function getBooksFromSource(force = false) {
   const merged = dedupeBooks([
     ...mappedLocal,
     ...mappedLocalFlat,
+    ...ghMappedLocal,
+    ...ghMappedLocalFlat,
     ...mappedCustom,
     ...mappedCmsLocal,
     ...mappedCmsGithub,
