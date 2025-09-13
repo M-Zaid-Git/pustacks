@@ -35,7 +35,13 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-  Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' identity.netlify.com unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' *.netlify.app *.netlify.com identity.netlify.com api.netlify.com;"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' identity.netlify.com unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' *.netlify.app *.netlify.com identity.netlify.com api.netlify.com;"
+
+# Relaxed CSP only for the CMS admin app
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' identity.netlify.com unpkg.com blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' *.netlify.app *.netlify.com identity.netlify.com api.netlify.com; frame-src app.netlify.com; worker-src 'self' blob:;"
 
 # Environment variables - NOTE: Set sensitive values in Netlify UI, not here!
 [build.environment]
