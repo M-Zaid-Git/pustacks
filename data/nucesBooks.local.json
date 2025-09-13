@@ -208,5 +208,10 @@
       "downloadLink": "https://drive.google.com/file/d/1GFxxk3jqAtILAKjiWLgK1JCuvaHXI92d/view?usp=sharing"
     }
   ],
-  "cmsItems": []
+  "cmsItems": [
+    {
+      "title": "Book for test",
+      "driveUrl": "https://drive.google.com/file/d/1GFxxk3jqAtILAKjiWLgK1JCuvaHXI92d/view?usp=sharing"
+    }
+  ]
 }
