@@ -62,7 +62,7 @@ collections:
             widget: "list"
             summary: "{{title}} — {{author}} ({{category}})"
             fields:
-              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Title", name: "title", widget: "string", required: false, hint: "Optional — will be auto-derived from the Drive link if left blank" }
               - { label: "Author", name: "author", widget: "string", required: false }
               - { label: "Google Drive Link", name: "driveUrl", widget: "string" }
               - { label: "Category", name: "category", widget: "string", required: false, hint: "Leave blank for auto-detect" }

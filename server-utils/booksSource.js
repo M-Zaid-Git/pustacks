@@ -73,6 +73,22 @@ function idFromUrl(url) {
   }
 }
 
+function deriveTitleFromUrl(u) {
+  try {
+    const s = String(u || '');
+    if (!s) return 'Resource';
+    // Try to extract file id or last segment
+    const m = s.match(/\/file\/d\/([^/]+)\//);
+    if (m && m[1]) return `Resource ${m[1].slice(0, 6)}`;
+    const url = new URL(s);
+    const parts = url.pathname.split('/').filter(Boolean);
+    if (parts.length) return decodeURIComponent(parts[parts.length - 1]).replace(/[-_]/g, ' ');
+    return 'Resource';
+  } catch {
+    return 'Resource';
+  }
+}
+
 function mapItem(it, source = 'remote') {
   const title = it?.volumeInfo?.title?.trim();
   const description = it?.volumeInfo?.description || 'No description provided.';
@@ -224,17 +240,21 @@ export async function getBooksFromSource(force = false) {
     const cmsFlat = Array.isArray(raw.cmsItems) ? raw.cmsItems : [];
     mappedLocal = nucesArr.map((x) => mapItem(x, 'local')).filter(Boolean);
     mappedLocalFlat = cmsFlat
-      .map((c) => ({
-        _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
-        title: c.title?.trim(),
-        author: c.author,
-        driveUrl: normalizeDriveShareLink(c.link || c.driveUrl),
-        description: c.description || 'Added resource',
-        category: classifySubject(c.title) || c.category || 'General',
-        cover: normalizeCover(c.cover),
-        source: 'local-cms',
-      }))
-      .filter((b) => b.title && b.driveUrl);
+      .map((c) => {
+        const driveUrl = normalizeDriveShareLink(c.link || c.driveUrl);
+        const title = (c.title && c.title.trim()) || deriveTitleFromUrl(driveUrl);
+        return {
+          _id: idFromUrl(driveUrl),
+          title,
+          author: c.author,
+          driveUrl,
+          description: c.description || 'Added resource',
+          category: classifySubject(title) || c.category || 'General',
+          cover: normalizeCover(c.cover),
+          source: 'local-cms',
+        };
+      })
+      .filter((b) => b.driveUrl);
   }
   let ghMappedLocal = [];
   let ghMappedLocalFlat = [];
@@ -251,17 +271,21 @@ export async function getBooksFromSource(force = false) {
     const cmsFlat = Array.isArray(ghSingle.cmsItems) ? ghSingle.cmsItems : [];
     ghMappedLocal = nucesArr.map((x) => mapItem(x, 'local-gh')).filter(Boolean);
     ghMappedLocalFlat = cmsFlat
-      .map((c) => ({
-        _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
-        title: c.title?.trim(),
-        author: c.author,
-        driveUrl: normalizeDriveShareLink(c.link || c.driveUrl),
-        description: c.description || 'Added resource',
-        category: classifySubject(c.title) || c.category || 'General',
-        cover: normalizeCover(c.cover),
-        source: 'local-cms-gh',
-      }))
-      .filter((b) => b.title && b.driveUrl);
+      .map((c) => {
+        const driveUrl = normalizeDriveShareLink(c.link || c.driveUrl);
+        const title = (c.title && c.title.trim()) || deriveTitleFromUrl(driveUrl);
+        return {
+          _id: idFromUrl(driveUrl),
+          title,
+          author: c.author,
+          driveUrl,
+          description: c.description || 'Added resource',
+          category: classifySubject(title) || c.category || 'General',
+          cover: normalizeCover(c.cover),
+          source: 'local-cms-gh',
+        };
+      })
+      .filter((b) => b.driveUrl);
   }
   const custom = readJsonSafe(CUSTOM_JSON) || [];
   const cmsItems = readAllJsonInDir(CMS_BOOKS_DIR);
@@ -275,55 +299,71 @@ export async function getBooksFromSource(force = false) {
     : [];
   const githubCms = await fetchCmsFromGithub();
   const mappedCustom = custom
-    .map((c) => ({
-      _id: idFromUrl(normalizeDriveShareLink(c.link || c.driveUrl)),
-      title: c.title?.trim(),
-      author: c.author,
-      driveUrl: normalizeDriveShareLink(c.link || c.driveUrl),
-      description: c.description || 'Added resource',
-      category: classifySubject(c.title) || c.category || 'General',
-      cover: normalizeCover(c.cover),
-      source: 'custom',
-    }))
-    .filter((b) => b.title && b.driveUrl);
+    .map((c) => {
+      const driveUrl = normalizeDriveShareLink(c.link || c.driveUrl);
+      const title = (c.title && c.title.trim()) || deriveTitleFromUrl(driveUrl);
+      return {
+        _id: idFromUrl(driveUrl),
+        title,
+        author: c.author,
+        driveUrl,
+        description: c.description || 'Added resource',
+        category: classifySubject(title) || c.category || 'General',
+        cover: normalizeCover(c.cover),
+        source: 'custom',
+      };
+    })
+    .filter((b) => b.driveUrl);
   const mappedCmsLocal = cmsItems
-    .map((c) => ({
-      _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
-      title: c.title?.trim(),
-      author: c.author,
-      driveUrl: normalizeDriveShareLink(c.driveUrl || c.link),
-      description: c.description || 'CMS resource',
-      category: classifySubject(c.title) || c.category || 'General',
-      cover: normalizeCover(c.cover),
-      source: 'cms',
-    }))
-    .filter((b) => b.title && b.driveUrl);
+    .map((c) => {
+      const driveUrl = normalizeDriveShareLink(c.driveUrl || c.link);
+      const title = (c.title && c.title.trim()) || deriveTitleFromUrl(driveUrl);
+      return {
+        _id: idFromUrl(driveUrl),
+        title,
+        author: c.author,
+        driveUrl,
+        description: c.description || 'CMS resource',
+        category: classifySubject(title) || c.category || 'General',
+        cover: normalizeCover(c.cover),
+        source: 'cms',
+      };
+    })
+    .filter((b) => b.driveUrl);
 
   const mappedCmsGithub = (Array.isArray(githubCms) ? githubCms : [])
-    .map((c) => ({
-      _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
-      title: c.title?.trim(),
-      author: c.author,
-      driveUrl: normalizeDriveShareLink(c.driveUrl || c.link),
-      description: c.description || 'CMS resource',
-      category: classifySubject(c.title) || c.category || 'General',
-      cover: normalizeCover(c.cover),
-      source: 'cms-github',
-    }))
-    .filter((b) => b.title && b.driveUrl);
+    .map((c) => {
+      const driveUrl = normalizeDriveShareLink(c.driveUrl || c.link);
+      const title = (c.title && c.title.trim()) || deriveTitleFromUrl(driveUrl);
+      return {
+        _id: idFromUrl(driveUrl),
+        title,
+        author: c.author,
+        driveUrl,
+        description: c.description || 'CMS resource',
+        category: classifySubject(title) || c.category || 'General',
+        cover: normalizeCover(c.cover),
+        source: 'cms-github',
+      };
+    })
+    .filter((b) => b.driveUrl);
 
   const mappedCmsMaster = cmsMasterArr
-    .map((c) => ({
-      _id: idFromUrl(normalizeDriveShareLink(c.driveUrl || c.link)),
-      title: c.title?.trim(),
-      author: c.author,
-      driveUrl: normalizeDriveShareLink(c.driveUrl || c.link),
-      description: c.description || 'CMS resource',
-      category: classifySubject(c.title) || c.category || 'General',
-      cover: normalizeCover(c.cover),
-      source: 'cms-master',
-    }))
-    .filter((b) => b.title && b.driveUrl);
+    .map((c) => {
+      const driveUrl = normalizeDriveShareLink(c.driveUrl || c.link);
+      const title = (c.title && c.title.trim()) || deriveTitleFromUrl(driveUrl);
+      return {
+        _id: idFromUrl(driveUrl),
+        title,
+        author: c.author,
+        driveUrl,
+        description: c.description || 'CMS resource',
+        category: classifySubject(title) || c.category || 'General',
+        cover: normalizeCover(c.cover),
+        source: 'cms-master',
+      };
+    })
+    .filter((b) => b.driveUrl);
 
   const merged = dedupeBooks([
     ...mappedLocal,
