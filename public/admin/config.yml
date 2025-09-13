@@ -31,21 +31,32 @@ collections:
       - label: "NUCES + CMS Books"
         name: "nucesBooksLocal"
         file: "data/nucesBooks.local.json"
-        description: "Edit cmsItems to add/remove books. Raw NUCES list remains untouched."
+        editor:
+          preview: false
+        description: "Use CMS Items to add/remove books. Raw NUCES list is for reference only."
         fields:
-          - label: "Raw NUCES Items (read-only)"
+          - label: "Raw NUCES Items (do not edit)"
             name: "raw"
             widget: "list"
+            allow_add: false
             collapsed: true
             summary: "{{fields.volumeInfo.title}}"
             fields:
-              - { label: "Title", name: "volumeInfo.title", widget: "string" }
-              - { label: "Thumbnail", name: "volumeInfo.imageLinks.thumbnail", widget: "string", required: false }
-              - { label: "Description", name: "volumeInfo.description", widget: "text", required: false }
-              - { label: "Categories", name: "volumeInfo.categories", widget: "list", default: [] }
+              - label: "Volume Info"
+                name: "volumeInfo"
+                widget: "object"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - label: "Image Links"
+                    name: "imageLinks"
+                    widget: "object"
+                    fields:
+                      - { label: "Thumbnail", name: "thumbnail", widget: "string", required: false }
+                  - { label: "Description", name: "description", widget: "text", required: false }
+                  - { label: "Categories", name: "categories", widget: "list", default: [] }
               - { label: "Download Link", name: "downloadLink", widget: "string" }
               - { label: "Solution Link", name: "solutionLink", widget: "string", required: false }
-            hint: "This section is for reference and should not be edited unless necessary."
+            hint: "For reference only; avoid editing."
           - label: "CMS Items"
             name: "cmsItems"
             widget: "list"
