@@ -46,3 +46,7 @@
 # Environment variables - NOTE: Set sensitive values in Netlify UI, not here!
 [build.environment]
   NODE_VERSION = "18"
+  ENABLE_GH_CMS_FETCH = "1"
+  GH_OWNER = "M-Zaid-Git"
+  GH_REPO = "pustacks"
+  GH_REF = "main"

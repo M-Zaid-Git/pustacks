@@ -106,10 +106,17 @@ const Topbar = () => {
                 A
               </button>
               <DarkMode />
-              <img 
-                src="/profile-avatar.jpg" 
-                alt="Profile" 
-                className="h-8 w-8 rounded-full shadow-md object-cover border-2 border-white/20" 
+              <img
+                src="/profile-avatar.jpg"
+                alt="Profile"
+                onError={(e) => {
+                  if (e.currentTarget.dataset.fallback) return;
+                  e.currentTarget.dataset.fallback = '1';
+                  e.currentTarget.src = '/placeholder-book.svg';
+                  e.currentTarget.classList.remove('object-cover');
+                  e.currentTarget.classList.add('object-contain', 'bg-white');
+                }}
+                className="h-8 w-8 rounded-full shadow-md object-cover border-2 border-white/20"
               />
             </div>
           </div>
@@ -258,10 +265,17 @@ const Topbar = () => {
               <div className="hidden sm:block h-6 w-px bg-gray-300 dark:bg-gray-600" />
 
               {/* User Avatar */}
-              <img 
-                src="/profile-avatar.jpg" 
-                alt="Profile" 
-                className="h-8 w-8 sm:h-9 sm:w-9 rounded-full shadow-md hover:shadow-lg transition-shadow cursor-pointer object-cover border-2 border-white/20" 
+              <img
+                src="/profile-avatar.jpg"
+                alt="Profile"
+                onError={(e) => {
+                  if (e.currentTarget.dataset.fallback) return;
+                  e.currentTarget.dataset.fallback = '1';
+                  e.currentTarget.src = '/placeholder-book.svg';
+                  e.currentTarget.classList.remove('object-cover');
+                  e.currentTarget.classList.add('object-contain', 'bg-white');
+                }}
+                className="h-8 w-8 sm:h-9 sm:w-9 rounded-full shadow-md hover:shadow-lg transition-shadow cursor-pointer object-cover border-2 border-white/20"
               />
 
               {/* Admin Link - Hidden on very small screens */}
