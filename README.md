@@ -1,7 +1,7 @@
 <<<<<<< HEAD
 # pustacks
 
-Live on pustacks.netlify.app
+Live on [PUstacks](https://pustacks.netlify.app/)
 
 A resource sharing to share course material and previous year papers
 =======
