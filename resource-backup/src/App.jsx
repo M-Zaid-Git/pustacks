@@ -18,7 +18,7 @@ import AdminPanel from './components/Admin';
 import BrowseResources from './pages/BrowseResources';
 import SimpleLandingPage from './pages/SimpleLandingPage';
 
-// Error boundary component
+// Error boundary component (kept as is)
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -60,40 +60,26 @@ const App = () => {
   const [loadingPhase, setLoadingPhase] = useState(0);
 
   useEffect(() => {
-    // Flag to verify app is rendering
-    console.log('App component mounted - Debug Info');
-    console.log('Redux store:', typeof store !== 'undefined' ? 'Available' : 'Not available');
-
-    try {
-      const authState = store.getState().auth;
-      console.log('Auth state:', authState ? 'Loaded' : 'Not loaded');
-    } catch (error) {
-      console.error('Error accessing Redux store:', error);
-    }
+    // Only keeping necessary logs for clarity
+    console.log('App component mounted');
 
     // First phase of loading - showing initial animation
     setLoadingPhase(1);
-    console.log('Loading phase set to 1');
 
     // Add listener for when the window fully loads (all resources)
     const handleLoad = () => {
-      console.log('Window load event triggered');
       setLoadingPhase(2); // Prepare to hide loading screen
-      console.log('Loading phase set to 2');
 
       // Short delay to allow for smooth transition
       setTimeout(() => {
-        console.log('Setting appLoaded to true');
         setAppLoaded(true);
       }, 500);
     };
 
     // Check if document is already loaded
     if (document.readyState === 'complete') {
-      console.log('Document already complete, calling handleLoad');
       handleLoad();
     } else {
-      console.log('Document not complete, adding load event listener');
       window.addEventListener('load', handleLoad);
     }
 
@@ -105,7 +91,7 @@ const App = () => {
   return (
     <>
       <ErrorBoundary>
-        {/* Initial loading state */}
+        {/* Initial loading state (kept as is) */}
         {!appLoaded && (
           <div
             className="fixed inset-0 flex flex-col items-center justify-center bg-white dark:bg-slate-900 z-50"
