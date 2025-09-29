@@ -135,6 +135,8 @@ function readAllJsonInDir(dirPath) {
 
 // Optionally fetch CMS entries directly from GitHub so new admin publishes appear
 // without waiting for a new Netlify build. Controlled via env and disabled by default.
+// Optionally fetch CMS entries directly from GitHub so new admin publishes appear
+// without waiting for a new Netlify build. Controlled via env and disabled by default.
 async function fetchCmsFromGithub() {
   try {
     const enabled = process.env.ENABLE_GH_CMS_FETCH === '1' || process.env.ENABLE_GITHUB_CMS_FETCH === '1';
@@ -142,7 +144,11 @@ async function fetchCmsFromGithub() {
     const repo = process.env.GH_REPO || process.env.GITHUB_REPO;
     const ref = process.env.GH_REF || process.env.GITHUB_REF || 'main';
     if (!enabled || !owner || !repo) return [];
-    const api = `https://api.github.com/repos/${owner}/${repo}/contents/data/books?ref=${encodeURIComponent(ref)}`;
+    
+    // Add cache-buster to the main API call URL
+    const cacheBuster = new Date().getTime(); 
+    const api = `https://api.github.com/repos/${owner}/${repo}/contents/data/books?ref=${encodeURIComponent(ref)}&v=${cacheBuster}`;
+    
     const headers = {
       'User-Agent': 'netlify-fn-books',
       Accept: 'application/vnd.github+json',
@@ -155,11 +161,17 @@ async function fetchCmsFromGithub() {
     if (!Array.isArray(list)) return [];
     const files = list.filter((it) => it.type === 'file' && /\.json$/i.test(it.name));
     const out = [];
+    
     // Parallel fetch with small concurrency
     const chunks = await Promise.all(
       files.map(async (f) => {
         try {
-          const r = await fetch(f.download_url, { headers });
+          let url = f.download_url;
+          
+          // 🌟 FIX: Apply cache-buster to the final download URL for each file
+          url = `${url}?v=${new Date().getTime()}`; 
+
+          const r = await fetch(url, { headers });
           if (!r.ok) return null;
           const obj = await r.json();
           if (obj && typeof obj === 'object') return obj;
@@ -173,7 +185,7 @@ async function fetchCmsFromGithub() {
     return [];
   }
 }
-
+// Fetch a single JSON file from GitHub (e.g., data/nucesBooks.local.json)
 // Fetch a single JSON file from GitHub (e.g., data/nucesBooks.local.json)
 async function fetchGithubJsonFile(relPath) {
   try {
@@ -182,18 +194,28 @@ async function fetchGithubJsonFile(relPath) {
     const repo = process.env.GH_REPO || process.env.GITHUB_REPO;
     const ref = process.env.GH_REF || process.env.GITHUB_REF || 'main';
     if (!enabled || !owner || !repo) return null;
-    const api = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(relPath)}?ref=${encodeURIComponent(ref)}`;
+    
+    // 1. Add cache-buster to the GitHub API call itself
+    const cacheBuster = new Date().getTime(); 
+    const api = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(relPath)}?ref=${encodeURIComponent(ref)}&v=${cacheBuster}`; 
+    
     const headers = {
       'User-Agent': 'netlify-fn-books',
       Accept: 'application/vnd.github+json',
     };
     const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.PERSONAL_GITHUB_TOKEN;
     if (token) headers.Authorization = `Bearer ${token}`;
+    
     const meta = await fetch(api, { headers });
     if (!meta.ok) return null;
     const metaJson = await meta.json();
-    const url = metaJson.download_url;
+    
+    let url = metaJson.download_url;
     if (!url) return null;
+    
+    // 2. Add cache-buster to the final download URL from GitHub's CDN
+    url = `${url}&v=${new Date().getTime()}`; 
+
     const res = await fetch(url, { headers });
     if (!res.ok) return null;
     return await res.json();
