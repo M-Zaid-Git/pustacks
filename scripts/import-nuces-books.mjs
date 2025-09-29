@@ -1,14 +1,24 @@
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
-import vm from 'vm';
+// import vm from 'vm'; // NO LONGER NEEDED
 import dotenv from 'dotenv';
 import connectDB from '../config/db.js';
 import Book from '../models/Book.js';
 
 dotenv.config();
 
-const RAW_URL = 'https://raw.githubusercontent.com/iMuhammadWali/Book-Finding-App/main/data/nucesBooks.js';
+// 🌟 FIX A: Use the RAW URL for your file and add the cache-buster 🌟
+const FILE_TO_READ = 'data/nucesBooks.local.json';
+const REPO_OWNER = 'M-Zaid-Git';
+const REPO_NAME = 'pustacks';
+const REPO_BRANCH = 'main';
+
+// Generate a unique timestamp to force GitHub's CDN to get the latest file
+const CACHE_BUSTER = new Date().getTime();
+const RAW_URL_BASE = 'https://raw.githubusercontent.com/M-Zaid-Git/pustacks/main/data/nucesBooks.local.json';
+const RAW_URL = `${RAW_URL_BASE}?v=${CACHE_BUSTER}`; 
+
 const LOCAL_FALLBACK = process.env.NUCES_LOCAL_PATH || path.resolve(path.dirname(new URL(import.meta.url).pathname), './nucesBooks.local.json');
 
 function fetchText(url) {
@@ -29,16 +39,8 @@ function fetchText(url) {
   });
 }
 
-function extractArray(jsCode) {
-  // Replace ESM export with global assignment so we can eval in a sandbox
-  const code = jsCode.replace(/export\s+default\s+NUCES_Books\s*;/, 'globalThis.NUCES_Books = NUCES_Books;');
-  const sandbox = { globalThis: {} };
-  vm.createContext(sandbox);
-  vm.runInContext(code, sandbox, { timeout: 2000 });
-  const arr = sandbox.globalThis.NUCES_Books;
-  if (!Array.isArray(arr)) throw new Error('NUCES_Books not found in fetched code');
-  return arr;
-}
+// ⚠️ DELETED: The 'extractArray' function is no longer needed 
+//             because we are reading a JSON file directly.
 
 function pickBestLink(item) {
   return item.downloadLink || item.solutionLink || item.solutionLink2 || '';
@@ -53,9 +55,12 @@ function normalizeCategory(item) {
 async function run() {
   let raw;
   try {
-    console.log('🔎 Fetching NUCES books from external repo...');
-    const js = await fetchText(RAW_URL);
-    raw = extractArray(js);
+    console.log('🔎 Fetching updated books from YOUR repo...');
+    
+    const text = await fetchText(RAW_URL);
+    // 🌟 New: Directly parse the content as JSON 
+    raw = JSON.parse(text); 
+    
   } catch (e) {
     console.warn('🌐 Remote fetch failed, falling back to local dataset:', e.message);
     if (!fs.existsSync(LOCAL_FALLBACK)) {
@@ -64,6 +69,13 @@ async function run() {
     const text = fs.readFileSync(LOCAL_FALLBACK, 'utf8');
     raw = JSON.parse(text);
   }
+  
+  // Ensure we have an array, even if empty
+  if (!Array.isArray(raw)) {
+      console.error("Fetched data is not an array, defaulting to empty list.");
+      raw = [];
+  }
+  
   const mapped = raw
     .map((it) => {
       const title = it?.volumeInfo?.title?.trim();
